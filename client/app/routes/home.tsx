@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <div>
-      <h1>Sighting Dashboard</h1>
+    <div className="container">
+      <h1>NZ Animal Sightings Dashboard</h1>
     </div>
   );
 }
