@@ -1,9 +1,14 @@
 
 :root {
-
+    --bg: #E6E6E6;
+    --bg-alt: #6C8480;
+    --accent: #7B9669;
+    --accent-light: #BAC8B1;
+    --accent-dark: #404E3B;
 }
 
 html,
 body {
-
+    margin: 15px;
+    background-color: var(--bg);
 }
