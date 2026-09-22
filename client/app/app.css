@@ -16,6 +16,7 @@ html,
 body {
     background-color: var(--bg);
     font-family: 'DM Sans', sans-serif;
+    margin: 0px !important;
 }
 
 *,
@@ -40,6 +41,50 @@ h1 {
     font-size: clamp(1.5rem, 4vw, 2.25rem);
     font-weight: 700;
     text-align: center;
+}
+
+nav {
+    height: var(--header-height);
+    background: var(--accent-dark);
+    display: flex;
+    align-items: center;
+    padding: 5px 24px 5px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav .divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+}
+
+.user-info {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-name {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.login-btn, .logout-btn {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+    font: inherit;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
 }
 
 .login-box {

@@ -3,6 +3,7 @@ import type { Route } from './+types/login';
 import { api, ApiError } from '../../lib/api';
 import { safeRedirect } from '../../lib/auth';
 import type { RegisterRequest, UserResponse } from '../../types';
+import { Link } from 'react-router';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
@@ -63,6 +64,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
           </div>
           {actionData?.error && <p role="alert">{actionData.error}</p>}
         </Form>
+        <Link to="/login" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B"}}>&larr; Back to login.</Link>
       </div>
     </div>
   )

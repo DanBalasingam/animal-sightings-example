@@ -51,10 +51,10 @@ export default function Login({ actionData }: Route.ComponentProps) {
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-primary btn-block" disabled={submitting}><span>Login</span></button>
-            <Link to="/register" style={{ textDecoration: "none", cursor: "pointer" }}>Or click here to register</Link>
           </div>
           {actionData?.error && <p role="alert">{actionData.error}</p>}
         </Form>
+        <Link to="/register" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>Or click here to register</Link>
       </div>
     </div>
   );

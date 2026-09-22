@@ -98,12 +98,13 @@ try {
                 'status' => 'ok'
             ]);
         }
+
         case 'POST /api/v1/register':
         {
-            $d     = body();
-            $email = strtolower(trim($d['email'] ?? ''));
-            $name  = trim($d['name'] ?? '');
-            $pw    = $d['password'] ?? '';
+            $data     = body();
+            $email = strtolower(trim($data['email'] ?? ''));
+            $name  = trim($data['name'] ?? '');
+            $pw    = $data['password'] ?? '';
             if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $name === '' || strlen($pw) < 8) {
                 response(['error' => 'Invalid input'], 422);
             }
@@ -123,11 +124,11 @@ try {
 
         case 'POST /api/v1/login':
         {
-            $d = body();
-            $s = db()->prepare('SELECT id, password_hash FROM "user" WHERE email = ?');
-            $s->execute([strtolower(trim($d['email'] ?? ''))]);
-            $row = $s->fetch();
-            if (!$row || !password_verify($d['password'] ?? '', $row['password_hash'])) {
+            $data = body();
+            $stmt = db()->prepare('SELECT id, password_hash FROM "user" WHERE email = ?');
+            $stmt->execute([strtolower(trim($data['email'] ?? ''))]);
+            $row = $stmt->fetch();
+            if (!$row || !password_verify($data['password'] ?? '', $row['password_hash'])) {
                 response(['error' => 'Invalid email or password'], 401);
             }
             session_regenerate_id(true);
@@ -135,10 +136,22 @@ try {
             response(['user' => current_user()], 200);
         }
 
+        case 'POST /api/logout':
+        {
+            $_SESSION = [];
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', [
+                'expires' => time() - 3600, 'path' => $params['path'], 'domain' => $params['domain'],
+                'secure' => $params['secure'], 'httponly' => $params['httponly'], 'samesite' => $params['samesite'],
+            ]);
+            session_destroy();
+            response(['ok' => true], 200);
+        }
+
         case 'GET /api/v1/me':
         {
-            $u = current_user();
-            $u ? response(['user' => $u], 200) : response(['error' => 'Not authenticated'], 401);
+            $user = current_user();
+            $user ? response(['user' => $user], 200) : response(['error' => 'Not authenticated'], 401);
         }
 
         case 'GET /api/v1/users':

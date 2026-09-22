@@ -1,8 +1,8 @@
 import { useRouteLoaderData } from 'react-router';
-import type { clientLoader } from '../routes/auth/auth-layout';
+import type { clientLoader } from '../layouts/default-layout';
 
 export function useUser() {
   const data = useRouteLoaderData<typeof clientLoader>('auth');
-  if (!data) throw new Error('useUser must be used under the auth layout');
+  if (!data) return null;
   return data.user;
 }
