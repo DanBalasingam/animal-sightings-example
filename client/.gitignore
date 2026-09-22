@@ -1,6 +1,8 @@
 node_modules
+build
 dist
 dist-ssr
+.react-router
 *.local
 .env
 .env.*
