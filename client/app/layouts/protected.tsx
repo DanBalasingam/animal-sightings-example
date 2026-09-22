@@ -1,5 +1,4 @@
-import { Outlet, redirect } from "react-router";
-import type { Route } from "./+types/protected";
+import { Outlet } from "react-router";
 // import { getCurrentUser } from "~/auth/session";
 
 // export async function clientLoader({ request }: Route.ClientLoaderArgs) {
@@ -11,7 +10,7 @@ import type { Route } from "./+types/protected";
 //   return { user };
 // }
 
-export default function ProtectedLayout({ loaderData }: Route.ComponentProps) {
+export default function ProtectedLayout() {
   return (
     <div>
       {/*<nav>{loaderData.user.name}</nav>*/}

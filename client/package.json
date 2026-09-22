@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc -b"
   },
   "dependencies": {
     "@react-router/node": "^7.18.4",
