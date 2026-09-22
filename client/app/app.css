@@ -30,11 +30,11 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1.2rem;
     padding: 1rem;
 }
 
-.login-header {
+h1 {
     margin: 0;
     color: var(--accent-dark);
     font-size: clamp(1.5rem, 4vw, 2.25rem);

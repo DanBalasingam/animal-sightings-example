@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
 interface FormData {
-  username: string;
+  email: string;
   password: string;
 }
 
 export default function Login() {
   const [formData, setFormData] = useState<FormData>({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -20,7 +20,7 @@ export default function Login() {
     }));
   };
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Submitted Data:', formData);
   };
@@ -32,12 +32,12 @@ export default function Login() {
         <form onSubmit={handleLogin}>
           <h2>Login</h2>
           <div className="form-group">
-            <label htmlFor="username">Username: </label>
+            <label htmlFor="email">Email: </label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleInputChange}
             />
           </div>
