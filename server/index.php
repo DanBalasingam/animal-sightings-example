@@ -2,6 +2,17 @@
 
 require_once 'db.php';
 
+session_name('sid');
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => !empty($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+session_start();
+header('Content-Type: application/json');
+
 function response($data, $status = 200) {
     http_response_code($status);
     echo json_encode($data);
@@ -10,6 +21,13 @@ function response($data, $status = 200) {
 
 function body() {
     return json_decode(file_get_contents('php://input'), true) ?? [];
+}
+
+function current_user(): ?array {
+    if (!isset($_SESSION['uid'])) return null;
+    $s = db()->prepare('SELECT id, email, name, created_at FROM "user" WHERE id = ?');
+    $s->execute([$_SESSION['uid']]);
+    return $s->fetch() ?: null;
 }
 
 /*
@@ -79,6 +97,48 @@ try {
             response([
                 'status' => 'ok'
             ]);
+        }
+        case 'POST /api/v1/register':
+        {
+            $d     = body();
+            $email = strtolower(trim($d['email'] ?? ''));
+            $name  = trim($d['name'] ?? '');
+            $pw    = $d['password'] ?? '';
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $name === '' || strlen($pw) < 8) {
+                response(['error' => 'Invalid input'], 422);
+            }
+            $now = gmdate('Y-m-d H:i:s');
+            try {
+                db()->prepare('INSERT INTO "user" (email, name, password_hash, created_at, updated_at)
+                               VALUES (?, ?, ?, ?, ?)')
+                    ->execute([$email, $name, password_hash($pw, PASSWORD_BCRYPT), $now, $now]);
+            } catch (PDOException $e) {
+                if ($e->getCode() === '23000') response(['error' => 'Email already registered'], 409);
+                throw $e;
+            }
+            session_regenerate_id(true);
+            $_SESSION['uid'] = (int) db()->lastInsertId();
+            response(['user' => current_user()], 201);
+        }
+
+        case 'POST /api/v1/login':
+        {
+            $d = body();
+            $s = db()->prepare('SELECT id, password_hash FROM "user" WHERE email = ?');
+            $s->execute([strtolower(trim($d['email'] ?? ''))]);
+            $row = $s->fetch();
+            if (!$row || !password_verify($d['password'] ?? '', $row['password_hash'])) {
+                response(['error' => 'Invalid email or password'], 401);
+            }
+            session_regenerate_id(true);
+            $_SESSION['uid'] = (int) $row['id'];
+            response(['user' => current_user()], 200);
+        }
+
+        case 'GET /api/v1/me':
+        {
+            $u = current_user();
+            $u ? response(['user' => $u], 200) : response(['error' => 'Not authenticated'], 401);
         }
 
         case 'GET /api/v1/users':
