@@ -6,7 +6,7 @@ export default function Sightings() {
 
   return (
     <div className="container">
-      <div className="sightings-heading">
+      <section className="sightings-heading">
         <div className="heading-left">
           <h1>Sightings</h1>
           <p>Every sighting recorded by the community, newest first unless you choose otherwise.</p>
@@ -23,8 +23,8 @@ export default function Sightings() {
             </select>
           </span>
         </div>
-      </div>
-      <div className="sightings-body">
+      </section>
+      <section className="sightings-body">
         <div className="filter-option-container">
           <div className="filter-option-heading">
             <h3>Filters</h3>
@@ -53,32 +53,21 @@ export default function Sightings() {
           </div>
         </div>
         <div className="sightings-content">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '5px', margin: '0px', padding: '0px' }}>
+          <div className="sightings-count">
             <h4>0</h4> {/* need to dynamically count sights */}
             <p>sightings</p>
           </div>
-          <div className="sightings-cards">
+          <div className="sightings-grid">
             <div className="sightings-card">
-              <img />
-              <div className="card-header">
-
-              </div>
-              <div className="card-name">
-
-              </div>
-              <div className="card-tags">
-
-              </div>
-              <div className="card-info">
-
-              </div>
-              <div className="card-footer">
-
-              </div>
+              <div className="sightings-image"></div>
+              <span className="sightings-category"></span>
+              <div className="sightings-desc"></div>
+              <span className="sightings-tags"></span>
+              <div className="sightings-user"></div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

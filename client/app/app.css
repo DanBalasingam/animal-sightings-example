@@ -225,6 +225,20 @@ nav .divider {
     gap: 3rem;
 }
 
+.sightings-count {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    margin: 5px;
+    padding: 0;
+}
+
+.sightings-count h4,
+.sightings-count p {
+    margin: 0;
+}
+
 .filter-option-container {
     max-width: 15vw;
     background-color: var(--surface );
