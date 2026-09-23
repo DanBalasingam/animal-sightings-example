@@ -30,6 +30,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
       <div className="login-box">
         <Form method='post'>
           <h2>Login</h2>
+          {actionData?.error && <div className='error-box'><p role="alert" >⚠ {actionData.error}</p></div>}
           <input type="hidden" name="redirectTo" value={params.get('redirectTo') ?? '/'} />
           <div className="form-group">
             <label htmlFor="email">Email: </label>
@@ -52,9 +53,10 @@ export default function Login({ actionData }: Route.ComponentProps) {
           <div className="form-group">
             <button type="submit" className="btn btn-primary btn-block" disabled={submitting}><span>Login</span></button>
           </div>
-          {actionData?.error && <p role="alert">{actionData.error}</p>}
         </Form>
         <Link to="/register" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>Or click here to register</Link>
+        <div className='break' style={{margin: "15px"}} />
+        <Link to="/" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to dashboard.</Link>
       </div>
     </div>
   );

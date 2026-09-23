@@ -31,6 +31,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
       <div className='login-box'>
         <Form method='post'>
           <h2>Sign Up</h2>
+          {actionData?.error && <div className='error-box'><p role="alert" >⚠ {actionData.error}</p></div>}
           <input type="hidden" name="redirectTo" value={params.get('redirectTo') ?? '/'} />
           <div className='form-group'>
             <label htmlFor='name'>Name: </label>
@@ -62,9 +63,8 @@ export default function Register({ actionData }: Route.ComponentProps) {
           <div className="form-group">
             <button type="submit" className="btn btn-primary btn-block" disabled={submitting}><span>Sign Up</span></button>
           </div>
-          {actionData?.error && <p role="alert">{actionData.error}</p>}
         </Form>
-        <Link to="/login" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B"}}>&larr; Back to login.</Link>
+        <Link to="/login" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>&larr; Back to login.</Link>
       </div>
     </div>
   )
