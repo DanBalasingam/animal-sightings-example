@@ -32,6 +32,13 @@ body {
 
 .container {
     min-height: 100vh;
+    /*display: flex;*/
+    padding: 3rem;
+    gap: 1.2rem;
+}
+
+.container-center {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,6 +54,8 @@ h1 {
     font-weight: 700;
     text-align: center;
 }
+
+
 
 nav {
     height: var(--header-height);
@@ -91,12 +100,11 @@ nav .divider {
     color: var(--text-muted);
 }
 
-.login-btn, .logout-btn {
+.btn, .login-btn, .logout-btn {
     padding: 0.5rem 0.75rem;
     font: inherit;
     font-weight: 500;
     color: var(--text);
-    background: var(--accent);
     border: none;
     border-radius: 30px;
     cursor: pointer;
@@ -105,9 +113,11 @@ nav .divider {
     white-space: nowrap;
 }
 
-.login-btn:hover, .logout-btn:hover {
+.btn:hover, .login-btn:hover, .logout-btn:hover {
     background-color: var(--accent-dark-alt);
 }
+
+
 
 .login-box {
     width: 100%;
@@ -188,4 +198,42 @@ nav .divider {
 
 .error-box p {
     color: var(--text-alt);
+}
+
+
+
+.sightings-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.heading-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.heading-right span {
+    display: flex;
+    gap: 1rem;
+}
+
+.sightings-body {
+    display: flex;
+    gap: 3rem;
+}
+
+.filter-option-container {
+    max-width: 15vw;
+    background-color: var(--surface );
+    padding: 5px 25px 10px 25px;
+    border-radius: var(--radius);
+}
+
+.filter-option-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

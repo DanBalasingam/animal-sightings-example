@@ -24,9 +24,10 @@ export default function NavHeader() {
     <nav>
       <Link className="logo" to="/" aria-label="home" style={{ "textDecoration": "none", "display": "inline-flex", "alignItems": "center", "gap": "9px" }}>
         <img src={logoMarkURL} alt="" width="45" height="45" />
+        <h5 className='nav-title'>NZ Animal Sightings</h5>
       </Link>
       <span className='divider' />
-      <h5 className='nav-title'>NZ Animal Sightings</h5>
+      <a className='btn' href='/sightings'>Sightings</a>
       <div className='user-info'>
         <AuthStatus />
       </div>

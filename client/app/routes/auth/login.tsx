@@ -34,7 +34,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
   const submitting = useNavigation().state === 'submitting';
 
   return (
-    <div className="container">
+    <div className="container-center">
       <h1 className="login-header">NZ Animal Sightings Dashboard</h1>
       <div className="login-box">
         <Form method='post'>
