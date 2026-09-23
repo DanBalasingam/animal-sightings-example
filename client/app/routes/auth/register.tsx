@@ -1,9 +1,18 @@
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
 import type { Route } from './+types/login';
 import { api, ApiError } from '../../lib/api';
-import { safeRedirect } from '../../lib/auth';
+import { getUser, safeRedirect } from '../../lib/auth';
 import type { RegisterRequest, UserResponse } from '../../types';
 import { Link } from 'react-router';
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const user = await getUser();
+  if (user) {
+    const url = new URL(request.url);
+    return redirect(safeRedirect(url.searchParams.get('redirectTo')));
+  }
+  return null;
+}
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
