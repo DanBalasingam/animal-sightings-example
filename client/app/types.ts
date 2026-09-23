@@ -5,6 +5,11 @@ export interface User {
   created_at: string;
 }
 
+export interface ApiResponse {
+  message: string;
+  status_code: number;
+}
+
 export interface UserResponse {
   user: User;
 }

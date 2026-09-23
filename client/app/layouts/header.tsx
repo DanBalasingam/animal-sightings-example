@@ -1,5 +1,6 @@
 import { useUser } from '../lib/use-user'
 import { Link } from 'react-router'
+import { logout } from '../lib/signout';
 
 function AuthStatus() {
   const user = useUser();
@@ -11,7 +12,7 @@ function AuthStatus() {
   return (
     <>
       <span className='user-name'>{user.name}</span>
-      <a className='logout-btn' href="/logout">Sign out</a>
+      <a className='logout-btn' onClick={logout}>Sign out</a>
     </>
   );
 }

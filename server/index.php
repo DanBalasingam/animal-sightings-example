@@ -4,7 +4,7 @@ require_once 'db.php';
 
 session_name('sid');
 session_set_cookie_params([
-    'lifetime' => 0,
+    'lifetime' => 36000,
     'path'     => '/',
     'secure'   => !empty($_SERVER['HTTPS']),
     'httponly' => true,
@@ -136,7 +136,7 @@ try {
             response(['user' => current_user()], 200);
         }
 
-        case 'POST /api/logout':
+        case 'POST /api/v1/logout':
         {
             $_SESSION = [];
             $params = session_get_cookie_params();
