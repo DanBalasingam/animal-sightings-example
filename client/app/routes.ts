@@ -4,6 +4,7 @@ export default [
   layout('layouts/default-layout.tsx', { id: 'auth' }, [
     index("routes/home.tsx"),
     route("sightings", "routes/sightings.tsx"),
+    route("species", "routes/species.tsx"),
     route("*", "routes/not-found.tsx"),
   ]),
   layout('layouts/auth-layout.tsx', [

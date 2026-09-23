@@ -22,3 +22,14 @@ export interface LoginRequest {
 export interface RegisterRequest extends LoginRequest {
   name: string;
 }
+
+export interface Specie {
+  id: number;
+  species_category_id: number;
+  threat_category_id: number;
+  common_name: string;
+  scientific_name: string;
+  maori_name: string;
+  population_estimate: number;
+  year_assessed: number;
+}

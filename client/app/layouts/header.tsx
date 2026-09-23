@@ -28,6 +28,7 @@ export default function NavHeader() {
       </Link>
       <span className='divider' />
       <a className='btn' href='/sightings'>Sightings</a>
+      <a className='btn' href='/species'>Species</a>
       <div className='user-info'>
         <AuthStatus />
       </div>
