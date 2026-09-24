@@ -25,11 +25,25 @@ export interface RegisterRequest extends LoginRequest {
 
 export interface Specie {
   id: number;
-  species_category_id: number;
-  threat_category_id: number;
   common_name: string;
   scientific_name: string;
   maori_name: string;
+  species_category: string;
+  threat_category: string;
   population_estimate: number;
-  year_assessed: number;
+  sightings: number;
+}
+
+export interface SpeciesCategory {
+  id: number;
+  name: string;
+}
+
+export interface Terrain {
+  id: number;
+  name: string;
+}
+
+export interface Region {
+  region: string;
 }

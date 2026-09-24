@@ -104,6 +104,10 @@ try {
 
         case 'GET /api/v1/users':
         {
+            if (isset($query_params['count'])) {
+                $count = db()->query('SELECT COUNT(*) FROM "user"')->fetchColumn();
+                response(['count' => (int) $count]);
+            }
             $users = db()
                 ->query('SELECT * FROM user')
                 ->fetchAll();
@@ -112,12 +116,95 @@ try {
 
         case 'GET /api/v1/species':
         {
-            // add query params and inner join on category, and threat tables
-            // select names from inner joins exclude IDs
-            $stmt = db()->prepare('SELECT * FROM species ORDER BY common_name');
-            $stmt->execute();
+            if (isset($query_params['count'])) {
+                $count = db()->query('SELECT COUNT(*) FROM "species"')->fetchColumn();
+                response(['count' => (int) $count]);
+            }
+
+            $where  = [];
+            $params = [];
+
+            $search = trim($query_params['search'] ?? '');
+            if ($search !== '') {
+                $where[]  = '(sp.common_name LIKE ? OR sp.maori_name LIKE ? OR sp.scientific_name LIKE ?)';
+                $like     = '%' . $search . '%';
+                $params[] = $like;
+                $params[] = $like;
+                $params[] = $like;
+            }
+
+            $category = trim($query_params['category'] ?? '');
+            if ($category !== '' && strtolower($category) !== 'all') {
+                $where[]  = 'LOWER(sc.name) = LOWER(?)';
+                $params[] = $category;
+            }
+
+            $sql = "SELECT
+                    sp.common_name,
+                    sp.scientific_name,
+                    sp.maori_name,
+                    sc.name AS species_category,
+                    tc.name AS threat_category,
+                    sp.population_estimate,
+                    COUNT(si.species_id) AS sightings
+                FROM species AS sp
+                INNER JOIN species_category AS sc
+                    ON sp.species_category_id = sc.id
+                INNER JOIN threat_category AS tc
+                    ON sp.threat_category_id = tc.id
+                LEFT JOIN sighting AS si
+                    ON sp.id = si.species_id
+                GROUP BY
+                    sp.id,
+                    sp.common_name,
+                    sp.scientific_name,
+                    sp.maori_name,
+                    sc.name,
+                    tc.name,
+                    sp.population_estimate";
+            if ($where) {
+                $sql .= ' WHERE ' . implode(' AND ', $where);
+            }
+            $sql .= ' ORDER BY sp.common_name';
+
+            $stmt = db()->prepare($sql);
+            $stmt->execute($params);
             $species = $stmt->fetchAll();
             response($species, 200);
+        }
+
+        case 'GET /api/v1/species/categories':
+        {
+            $stmt = db()->prepare('SELECT * FROM species_category');
+            $stmt->execute();
+            $categories = $stmt->fetchAll();
+            response($categories, 200);
+        }
+
+        case 'GET /api/v1/sightings':
+        {
+            response('WIP', 200);
+        }
+
+        case 'POST /api/v1/sightings':
+        {
+            response('WIP', 200);
+        }
+
+        case 'GET /api/v1/regions':
+        {
+            $stmt = db()->prepare('SELECT DISTINCT region FROM location');
+            $stmt->execute();
+            $regions = $stmt->fetchAll();
+            response($regions, 200);
+        }
+
+        case 'GET /api/v1/terrain':
+        {
+            $stmt = db()->prepare('SELECT * FROM terrain_feature');
+            $stmt->execute();
+            $terrain = $stmt->fetchAll();
+            response($terrain, 200);
         }
 
         default:

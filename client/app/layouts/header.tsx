@@ -30,6 +30,7 @@ export default function NavHeader() {
       <a className='btn' href='/sightings'>Sightings</a>
       <a className='btn' href='/species'>Species</a>
       <div className='user-info'>
+        <a className='report-sighting-btn' href='/'>+ Report a sighting</a>
         <AuthStatus />
       </div>
    </nav>

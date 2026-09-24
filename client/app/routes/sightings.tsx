@@ -1,8 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { SpeciesCategory, Region, Terrain } from '../types';
+import { api } from '../lib/api';
+
+const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
+const ALL_REGION: Region = { region: 'All Regions' };
 
 export default function Sightings() {
   const [sortBy, setSortBy] = useState('newest');
-  const [regions, setRegions] = useState('all');
+  const [selectedSpeciesId, setSelectedSpeciesId] = useState(0);
+  const [categories, setCategories] = useState<SpeciesCategory[]>([ALL_CATEGORY]);
+  const [regions, setRegions] = useState<Region[]>([ALL_REGION]);
+  const [selectedRegion, setSelectedRegion] = useState<string>(ALL_REGION.region);
+  const [placeSearch, setPlaceSearch] = useState('');
+  const [terrain, setTerrain] = useState<Terrain[]>();
+  const [selectedTerrain, setSelectedTerrain] = useState<number[]>([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api<SpeciesCategory[]>('/species/categories', { method: 'GET' })
+      .then((categories) => setCategories([ALL_CATEGORY, ...categories]))
+      .catch((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      });
+
+    api<Region[]>('/regions', { method: 'GET' })
+      .then((regions) => setRegions([ALL_REGION, ...regions]))
+      .catch((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      });
+
+    api<Terrain[]>('/terrain', { method: 'GET' })
+      .then((terrain) => setTerrain(terrain))
+      .catch((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      });
+  }, []);
 
   return (
     <div className="container">
@@ -36,20 +68,68 @@ export default function Sightings() {
           </span>
           <h4>Species category</h4>
           <div className="species-options">
-            {/* think about how to create the selection buttons... */}
+            <div className="filter-option">
+              {categories.map((category) => {
+                const isSelected = selectedSpeciesId === category.id;
+
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedSpeciesId(category.id)}
+                    className={isSelected ? "filter-category-btn selected" : "filter-category-btn"}
+                  >
+                    {category.name}
+                  </button>
+                )
+              })}
+            </div>
           </div>
           <h4>Region</h4>
+
           <select
-            value={regions}
-            onChange={e => setRegions(e.target.value)}
-          > {/* probs need to fix this up to select multiple and create an array instead */}
-            <option value='all'>All regions</option>
-            {/* map to a list of regions from the api... */}
+            value={selectedRegion}
+            onChange={e => setSelectedRegion(e.target.value)}
+          >
+            {regions.map((region) => {
+              return (
+                <option key={region.region} value={region.region}>{region.region}</option>
+              )
+            })}
           </select>
+          <h4>Place</h4>
+          <input
+            type="text"
+            name="place-search"
+            className="place-search"
+            placeholder="Town, hut, track..."
+            value={placeSearch}
+            onChange={e => setPlaceSearch(e.target.value)}
+          />
           <h4>Terrain feature</h4>
           <p>Show sightings at places with any selected features</p>
           <div className="terrain-options">
-            {/* think about how to create the selection buttons... */}
+            {/* Change to a drop down multi select */}
+            {terrain?.map((terrain) => {
+              const isSelected = selectedTerrain.includes(terrain.id);
+
+              const toggleTerrain = () => {
+                setSelectedTerrain((prev) =>
+                  prev.includes(terrain.id)
+                    ? prev.filter((id) => id !== terrain.id)
+                    : [...prev, terrain.id]
+                );
+              };
+
+              return (
+                <button
+                  key={terrain.id}
+                  onClick={toggleTerrain}
+                  className={isSelected ? "filter-category-btn selected" : "filter-category-btn"}
+                >
+                  {terrain.name}
+                </button>
+              )
+            })}
           </div>
         </div>
         <div className="sightings-content">
@@ -58,6 +138,7 @@ export default function Sightings() {
             <p>sightings</p>
           </div>
           <div className="sightings-grid">
+            {error && <div><h4>{error}</h4></div>}
             <div className="sightings-card">
               <div className="sightings-image"></div>
               <span className="sightings-category"></span>
