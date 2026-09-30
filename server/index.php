@@ -183,7 +183,51 @@ try {
 
         case 'GET /api/v1/sightings':
         {
-            response('WIP', 200);
+            $sql = "SELECT
+                        si.id,
+                        si.individual_count,
+                        si.notes,
+                        si.sighting_datetime,
+                        si.created_at,
+                        sp.common_name,
+                        sp.scientific_name,
+                        sp.maori_name,
+                        sp.population_estimate,
+                        sp.year_assessed,
+                        sc.name AS species_category,
+                        tc.name AS threat_category,
+                        lc.name AS location_name,
+                        lc.latitude,
+                        lc.longitude,
+                        lc.region,
+                        img.filename AS sighting_image,
+                        usr.name AS observer_name,
+                        (
+                            SELECT GROUP_CONCAT(tf.name, ',')
+                            FROM location_terrain_feature AS ltf
+                            INNER JOIN terrain_feature AS tf
+                                ON ltf.feature_id = tf.id
+                            WHERE ltf.location_id = si.sighting_location_id
+                        ) AS terrain_features
+                    FROM sighting AS si
+                    INNER JOIN species AS sp
+                        ON si.species_id = sp.id
+                    INNER JOIN species_category AS sc
+                        ON sp.species_category_id = sc.id
+                    INNER JOIN threat_category AS tc
+                        ON sp.threat_category_id = tc.id
+                    INNER JOIN location AS lc
+                        ON si.sighting_location_id = lc.id
+                    LEFT JOIN image AS img
+                        ON si.sighting_image_id = img.id
+                    LEFT JOIN user AS usr
+                        ON si.observer_user_id = usr.id
+                    ORDER BY si.created_at DESC";
+
+            $stmt = db()->prepare($sql);
+            $stmt->execute();
+            $sightings = $stmt->fetchAll();
+            response($sightings, 200);
         }
 
         case 'POST /api/v1/sightings':
