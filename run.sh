@@ -6,7 +6,7 @@ echo "Frontend React App: http://localhost:3000"
 echo "(Ctrl+C to stop)"
 echo ""
 
-(cd server && php -S localhost:8000) &
+(cd server && php -S localhost:8000 index.php) &
 
 cd client
 npm run dev -- --port 3000
