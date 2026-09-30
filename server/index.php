@@ -183,6 +183,45 @@ try {
 
         case 'GET /api/v1/sightings':
         {
+            if (isset($query_params['count'])) {
+                $count = db()->query('SELECT COUNT(si.id) FROM sightings AS si')->fetchColumn();
+                response(['count' => (int) $count]);
+            }
+
+            $where = [];
+            $params = [];
+
+            if (isset($query_params['user'])) {
+                if ($query_params['user'] === 'me') {
+                    $me = current_user();
+                    if ($me === null) {
+                        response(['Error' => 'User not authenticated'], 401);
+                    }
+                    $where[] = 'usr.id = ?';
+                    $params[] = $me['id'];
+                }
+            } else if (isset($query_params['category']) &&
+                        trim(strtolower($query_params['category'])) !== 'all') {
+                $category = trim($query_params['category']);
+                $where[] = 'LOWER(sc.name) = LOWER(?)';
+                $params[] = $category;
+            } else if (isset($query_params['region'])) {
+                $region = trim($query_params['region']);
+                $where[] = 'LOWER(lc.region) = LOWER(?)';
+                $params[] = $region;
+            } else if (isset($query_params['place'])) {
+                $search = trim($query_params['search']);
+                $where[] = 'lc.name LIKE ?';
+                $like = '%' . $search . "%";
+                $params[] = $like;
+            }
+            // TODO: add terrain feature query...
+
+            $order = trim(strtoupper($query_params['order'] ?? ''));
+            if (($order === '') || (($order !== 'ASC') && ($order !== 'DESC'))) {
+                $order = 'DESC';
+            }
+
             $sql = "SELECT
                         si.id,
                         si.individual_count,
@@ -221,11 +260,15 @@ try {
                     LEFT JOIN image AS img
                         ON si.sighting_image_id = img.id
                     LEFT JOIN user AS usr
-                        ON si.observer_user_id = usr.id
-                    ORDER BY si.created_at DESC";
+                        ON si.observer_user_id = usr.id";
 
+            if ($where) {
+                $sql .= ' WHERE ' . implode(' AND ', $where);
+            }
+
+            $sql .= " ORDER BY si.created_at {$order} ";
             $stmt = db()->prepare($sql);
-            $stmt->execute();
+            $stmt->execute($params);
             $sightings = $stmt->fetchAll();
             response($sightings, 200);
         }
