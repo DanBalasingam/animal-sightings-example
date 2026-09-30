@@ -214,7 +214,7 @@ try {
 
             $sql = "SELECT
                         si.id,
-                        si.individual_count,
+                        si.individual_count AS num_seen,
                         si.notes,
                         si.sighting_datetime,
                         si.created_at,
