@@ -116,11 +116,6 @@ try {
 
         case 'GET /api/v1/species':
         {
-            if (isset($query_params['count'])) {
-                $count = db()->query('SELECT COUNT(*) FROM "species"')->fetchColumn();
-                response(['count' => (int) $count]);
-            }
-
             $where  = [];
             $params = [];
 
@@ -183,11 +178,6 @@ try {
 
         case 'GET /api/v1/sightings':
         {
-            if (isset($query_params['count'])) {
-                $count = db()->query('SELECT COUNT(si.id) FROM sightings AS si')->fetchColumn();
-                response(['count' => (int) $count]);
-            }
-
             $where = [];
             $params = [];
 
