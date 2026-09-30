@@ -47,3 +47,25 @@ export interface Terrain {
 export interface Region {
   region: string;
 }
+
+export interface Sighting {
+  id: number;
+  num_seen: number;
+  notes: string;
+  sighting_datetime: string;
+  created_at: string;
+  common_name: string;
+  scientific_name: string;
+  maori_name: string;
+  population_estimate: number;
+  year_assessed: number;
+  species_category: string;
+  threat_category: string;
+  location_name: string;
+  latitude: number;
+  longitude: number;
+  region: string;
+  sighting_image?: string;
+  observer_name?: string;
+  terrain_features: string;
+}
