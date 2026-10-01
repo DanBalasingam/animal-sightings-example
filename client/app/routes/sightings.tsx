@@ -6,7 +6,7 @@ const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };
 
 export default function Sightings() {
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState('DESC');
   const [selectedSpeciesId, setSelectedSpeciesId] = useState(0);
   const [categories, setCategories] = useState<SpeciesCategory[]>([ALL_CATEGORY]);
   const [regions, setRegions] = useState<Region[]>([ALL_REGION]);
@@ -35,15 +35,42 @@ export default function Sightings() {
       .catch((e) => {
         if (e.name !== 'AbortError') setError(e);
       });
-
-    api<Sighting[]>('/sightings', { method: 'GET' })
-      .then((sighting) => {
-        setSightings(sighting);
-      })
-      .catch((e) => {
-        if (e.name !== 'AbortError') setError(e);
-      });
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams();
+      if (placeSearch.trim() !== '') params.set('place', placeSearch.trim());
+      if (selectedRegion !== ALL_REGION.region) params.set('region', selectedRegion);
+      if (sortBy.trim() !== '') params.set('order', sortBy);
+      if (selectedSpeciesId !== 0) {
+        const category = categories.find((c) => c.id === selectedSpeciesId);
+        if (category) params.set('category', category.name);
+      }
+
+      const query = params.toString()
+
+      api<Sighting[]>(`/sightings${query ? `?${query}` : ''}`, { method: 'GET' })
+        .then((sighting) => {
+          if (!cancelled) setSightings(sighting);
+        })
+        .catch((e) => {
+          if (!cancelled && e.name !== 'AbortError') setError(e);
+        });
+    }, 300)
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    }
+  }, [placeSearch, selectedRegion, sortBy, selectedSpeciesId, categories]);
+
+  function clearFilters() {
+    setSelectedSpeciesId(0);
+    setSelectedRegion(ALL_REGION.region);
+    setPlaceSearch('');
+  }
 
   return (
     <div className="container">
@@ -60,8 +87,8 @@ export default function Sightings() {
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
             >
-              <option value="newest">Newest sighting first</option>
-              <option value="oldest">Oldest sighting first</option>
+              <option value="DESC">Newest sighting first</option>
+              <option value="ASC">Oldest sighting first</option>
             </select>
           </label>
         </div>
@@ -70,7 +97,7 @@ export default function Sightings() {
         <div className="filter-option-container">
           <div className="filter-option-heading">
             <h3>Filters</h3>
-            <a className="clear-filters">Clear all</a> {/* onclick remove all filters */}
+            <a className="clear-filters" onClick={() => clearFilters()}>Clear all</a> {/* onclick remove all filters */}
           </div>
           <label className="filter-checkbox">
             <input type='checkbox' name='mySightings' />
