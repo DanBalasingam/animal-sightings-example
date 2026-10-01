@@ -148,19 +148,19 @@ try {
                 INNER JOIN threat_category AS tc
                     ON sp.threat_category_id = tc.id
                 LEFT JOIN sighting AS si
-                    ON sp.id = si.species_id
-                GROUP BY
+                    ON sp.id = si.species_id";
+            if ($where) {
+                $sql .= ' WHERE ' . implode(' AND ', $where);
+            }
+            $sql .= ' GROUP BY
                     sp.id,
                     sp.common_name,
                     sp.scientific_name,
                     sp.maori_name,
                     sc.name,
                     tc.name,
-                    sp.population_estimate";
-            if ($where) {
-                $sql .= ' WHERE ' . implode(' AND ', $where);
-            }
-            $sql .= ' ORDER BY sp.common_name';
+                    sp.population_estimate
+                ORDER BY sp.common_name';
 
             $stmt = db()->prepare($sql);
             $stmt->execute($params);
@@ -181,29 +181,32 @@ try {
             $where = [];
             $params = [];
 
-            if (isset($query_params['user'])) {
-                if ($query_params['user'] === 'me') {
-                    $me = current_user();
-                    if ($me === null) {
-                        response(['Error' => 'User not authenticated'], 401);
-                    }
-                    $where[] = 'usr.id = ?';
-                    $params[] = $me['id'];
+            $user = $query_params['user'] ?? null;
+            if ($user === 'me') {
+                $me = current_user();
+                if ($me === null) {
+                    response(['Error' => 'User not authenticated'], 401);
                 }
-            } else if (isset($query_params['category']) &&
-                        trim(strtolower($query_params['category'])) !== 'all') {
-                $category = trim($query_params['category']);
+                $where[] = 'usr.id = ?';
+                $params[] = $me['id'];
+            }
+
+            $category = trim($query_params['category'] ?? '');
+            if ($category !== '' && strtolower($category) !== 'all') {
                 $where[] = 'LOWER(sc.name) = LOWER(?)';
                 $params[] = $category;
-            } else if (isset($query_params['region'])) {
-                $region = trim($query_params['region']);
+            }
+
+            $region = trim($query_params['region'] ?? '');
+            if ($region !== '') {
                 $where[] = 'LOWER(lc.region) = LOWER(?)';
                 $params[] = $region;
-            } else if (isset($query_params['place'])) {
-                $search = trim($query_params['search']);
+            }
+
+            $place = trim($query_params['place'] ?? '');
+            if ($place !== '') {
                 $where[] = 'lc.name LIKE ?';
-                $like = '%' . $search . "%";
-                $params[] = $like;
+                $params[] = '%' . $place . '%';
             }
             // TODO: add terrain feature query...
 
