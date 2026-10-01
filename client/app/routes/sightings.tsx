@@ -15,7 +15,7 @@ export default function Sightings() {
   const [terrains, setTerrains] = useState<Terrain[]>();
   const [selectedTerrain, setSelectedTerrain] = useState<number[]>([]);
   const [sightings, setSightings] = useState<Sighting[]>([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     api<SpeciesCategory[]>('/species/categories', { method: 'GET' })
@@ -147,7 +147,7 @@ export default function Sightings() {
             <p>sightings</p>
           </div>
           <div className="sightings-grid">
-            {error && <div><h4>{error}</h4></div>}
+            {error && <div><h4>{error.message}</h4></div>}
             {sightings && sightings.map(sighting => {
 
               const sighting_date = new Date(sighting.sighting_datetime);
