@@ -9,7 +9,7 @@ export default function Species() {
   const [selectedId, setSelectedId] = useState(0);
   const [categories, setCategories] = useState<SpeciesCategory[]>([ALL_CATEGORY]);
   const [species, setSpecies] = useState<Specie[]>([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     api<SpeciesCategory[]>('/species/categories', { method: 'GET' })
@@ -87,6 +87,7 @@ export default function Species() {
         <div className="species-count">
           <p>Showing {species?.length} species</p>
         </div>
+        {error && <div><h4>{error.message}</h4></div>}
         <table>
           <thead>
             <tr>
@@ -113,7 +114,6 @@ export default function Species() {
                 </tr>
               )
             })}
-            {error && <div><h4>{error}</h4></div>}
           </tbody>
         </table>
       </section>
