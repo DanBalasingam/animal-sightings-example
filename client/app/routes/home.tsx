@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from '../lib/api';
+import type { Count } from '../types';
 import keaImage from '../assets/kea_2d5851.jpg';
 import hectorsDolphinImage from '../assets/hector_s_dolphin_c6e6f9.jpg';
 import tuataraImage from '../assets/tuatara_0dbbfd.jpg';
@@ -14,27 +15,22 @@ const featuredAnimals = [
 ];
 
 export default function Home() {
-  const [speciesCount, setSpeciesCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
+  const [counts, setCounts] = useState<Count>();
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    api<{ count: number }>('/species?count', { method: 'GET' })
-      .then((r) => setSpeciesCount(r.count))
+    api<Count>('/counts', { method: 'GET' })
+      .then((data) => setCounts(data))
       .catch((e) => {
-        if (e.name !== 'AbortError') console.error(e);
-      });
-    api<{ count: number }>('/users?count', { method: 'GET' })
-      .then((r) => setUsersCount(r.count))
-      .catch((e) => {
-        if (e.name !== 'AbortError') console.error(e);
-      });
+        if (e.name !== 'AbortError') setError(e)
+      })
   }, []);
 
   const stats = [
-    { label: 'Sightings logged', value: '0' },
-    { label: 'Species tracked', value: speciesCount },
-    { label: 'Regions covered', value: '0' },
-    { label: 'Contributors', value: usersCount },
+    { label: 'Sightings logged', value: counts?.sightings_count },
+    { label: 'Species tracked', value: counts?.species_count },
+    { label: 'Regions covered', value: counts?.region_count },
+    { label: 'Contributors', value: counts?.users_count },
   ];
 
   return (
