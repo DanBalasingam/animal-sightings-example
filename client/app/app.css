@@ -14,6 +14,7 @@
     --radius: 10px;
     --header-height: 48px;
     --border: rgba(255, 255, 255, 0.2);
+    --border-alt: rgba(128, 128, 128, 0.3);
     --text-muted: rgba(255, 255, 255, 0.7);
 }
 
@@ -248,11 +249,8 @@ nav .divider {
 
 .sightings-count {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 5px;
-    margin: 5px;
-    padding: 0;
 }
 
 .sightings-count h4,
@@ -293,6 +291,128 @@ nav .divider {
     border-color: var(--accent-dark-alt);
 }
 
+.sightings-grid {
+    display: grid;
+    margin-top: 10px;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+}
+
+.sightings-card {
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: 0;
+}
+.card-body {
+    padding: 5px 20px 20px 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.card-header p {
+    margin: 0;
+}
+
+.card-category {
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+.threat-tag {
+    color: var(--text-alt);
+    background: var(--bg-alt);
+}
+
+.threat-tag.not-threatened {
+    color: #1F4D2B;
+    background: #C8E6C9;
+}
+
+.threat-tag.nationally-increasing {
+    color: #1B4A5A;
+    background: #B9DFEA;
+}
+
+.threat-tag.declining {
+    color: #5C4A00;
+    background: #F5E19A;
+}
+
+.threat-tag.nationally-vulnerable {
+    color: #6B3A00;
+    background: #F9C98A;
+}
+
+.threat-tag.nationally-endangered {
+    color: #7A1F00;
+    background: #F4A582;
+}
+
+.threat-tag.nationally-critical {
+    color: var(--text);
+    background: #B3261E;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+}
+
+.terrain-tag {
+    font-weight: 500;
+    color: var(--accent-dark);
+    background: transparent;
+    border: 1px solid var(--accent);
+}
+
+.card-desc {
+    display: block;
+}
+.card-desc p,
+.card-desc h4 {
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+.italics {
+    font-style: italic;
+}
+.location {
+    display: flex;
+    margin: 10px 0 0 0 !important;
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-alt);
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    display: block;
+}
+.card-footer p {
+    margin: 0;
+    padding: 0;
+}
 
 
 .hero {

@@ -56,7 +56,7 @@ export interface Sighting {
   created_at: string;
   common_name: string;
   scientific_name: string;
-  maori_name: string;
+  maori_name?: string;
   population_estimate: number;
   year_assessed: number;
   species_category: string;

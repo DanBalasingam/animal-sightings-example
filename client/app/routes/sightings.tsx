@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { SpeciesCategory, Region, Terrain } from '../types';
+import type { SpeciesCategory, Region, Terrain, Sighting } from '../types';
 import { api } from '../lib/api';
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
@@ -12,8 +12,9 @@ export default function Sightings() {
   const [regions, setRegions] = useState<Region[]>([ALL_REGION]);
   const [selectedRegion, setSelectedRegion] = useState<string>(ALL_REGION.region);
   const [placeSearch, setPlaceSearch] = useState('');
-  const [terrain, setTerrain] = useState<Terrain[]>();
+  const [terrains, setTerrains] = useState<Terrain[]>();
   const [selectedTerrain, setSelectedTerrain] = useState<number[]>([]);
+  const [sightings, setSightings] = useState<Sighting[]>([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -30,7 +31,15 @@ export default function Sightings() {
       });
 
     api<Terrain[]>('/terrain', { method: 'GET' })
-      .then((terrain) => setTerrain(terrain))
+      .then((terrain) => setTerrains(terrain))
+      .catch((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      });
+
+    api<Sighting[]>('/sightings', { method: 'GET' })
+      .then((sighting) => {
+        setSightings(sighting);
+      })
       .catch((e) => {
         if (e.name !== 'AbortError') setError(e);
       });
@@ -109,7 +118,7 @@ export default function Sightings() {
           <p>Show sightings at places with any selected features</p>
           <div className="terrain-options">
             {/* Change to a drop down multi select */}
-            {terrain?.map((terrain) => {
+            {terrains?.map((terrain) => {
               const isSelected = selectedTerrain.includes(terrain.id);
 
               const toggleTerrain = () => {
@@ -134,18 +143,62 @@ export default function Sightings() {
         </div>
         <div className="sightings-content">
           <div className="sightings-count">
-            <h4>0</h4> {/* need to dynamically count sights */}
+            <h4>{sightings?.length}</h4>
             <p>sightings</p>
           </div>
           <div className="sightings-grid">
             {error && <div><h4>{error}</h4></div>}
-            <div className="sightings-card">
-              <div className="sightings-image"></div>
-              <span className="sightings-category"></span>
-              <div className="sightings-desc"></div>
-              <span className="sightings-tags"></span>
-              <div className="sightings-user"></div>
-            </div>
+            {sightings && sightings.map(sighting => {
+
+              const sighting_date = new Date(sighting.sighting_datetime);
+              const humanReadableSD = new Intl.DateTimeFormat('en-NZ', {
+                dateStyle: 'medium',
+                timeStyle: 'short'
+              }).format(sighting_date);
+
+              const threatClass = sighting.threat_category?.toLowerCase().replace(/\s+/g, '-');
+              const terrainFeatures = (sighting.terrain_features ?? '')
+                .split(',')
+                .map((feature) => feature.trim())
+                .filter(Boolean);
+
+              return (
+                <div key={sighting.id} className="sightings-card">
+                  <div className="card-image">
+
+                  </div>
+                  <div className="card-body">
+                    <div className="card-header">
+                      <span className={`tag threat-tag ${threatClass}`}>
+                        {sighting.threat_category}
+                      </span>
+                      <p className="card-category">
+                        {sighting.species_category}
+                      </p>
+                    </div>
+                    <div className="card-desc">
+                      <h4>{sighting.common_name}</h4>
+                      <p>{sighting.maori_name ?? "⎯"}</p>
+                      <p className="italics">{sighting.scientific_name}</p>
+                      <span className="location"><p>&#x2316; {sighting.location_name}, {sighting.region}</p></span>
+                    </div>
+                    <div className="card-tags">
+                      {terrainFeatures.map((feature) => (
+                        <span key={feature} className="tag terrain-tag">{feature}</span>
+                      ))}
+                    </div>
+                    <div className="card-info">
+                      <p>{sighting.num_seen} individuals</p>
+                      <p>Pop. est. {sighting.population_estimate}</p>
+                    </div>
+                    <div className="card-footer">
+                      <b>{sighting.observer_name}</b>
+                      <p>{humanReadableSD}</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
