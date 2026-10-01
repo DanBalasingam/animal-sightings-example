@@ -102,17 +102,13 @@ try {
             $user ? response(['user' => $user], 200) : response(['error' => 'Not authenticated'], 401);
         }
 
-        case 'GET /api/v1/users':
-        {
-            if (isset($query_params['count'])) {
-                $count = db()->query('SELECT COUNT(*) FROM "user"')->fetchColumn();
-                response(['count' => (int) $count]);
-            }
-            $users = db()
-                ->query('SELECT * FROM user')
-                ->fetchAll();
-            response($users);
-        }
+        // case 'GET /api/v1/users':
+        // {
+        //     $users = db()
+        //         ->query('SELECT * FROM user')
+        //         ->fetchAll();
+        //     response($users);
+        // }
 
         case 'GET /api/v1/species':
         {
@@ -166,6 +162,22 @@ try {
             $stmt->execute($params);
             $species = $stmt->fetchAll();
             response($species, 200);
+        }
+
+        case 'GET /api/v1/counts':
+        {
+            $countSpecies = db()->query('SELECT COUNT(*) FROM "species"')->fetchColumn();
+            $countSightings = db()->query('SELECT COUNT(si.id) FROM sighting AS si')->fetchColumn();
+            $countUsers = db()->query('SELECT COUNT(*) FROM "user"')->fetchColumn();
+            $countRegions = db()->query('SELECT COUNT(DISTINCT region) FROM location')->fetchColumn();
+
+            $count = [
+                'users_count' => $countUsers,
+                'species_count' => $countSpecies,
+                'sightings_count' => $countSightings,
+                'region_count' => $countRegions
+            ];
+            response($count, 200);
         }
 
         case 'GET /api/v1/species/categories':
