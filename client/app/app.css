@@ -226,25 +226,67 @@ nav .divider {
 
 .sightings-heading {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    margin-bottom: 2rem;
 }
 
 .heading-left {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    flex: 1 1 24rem;
 }
 
-.heading-right span {
+.heading-left p {
+    margin: 0.5rem 0 0;
+}
+
+.sort-by {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-dark);
+    white-space: nowrap;
+}
+
+.select,
+.place-search {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text-alt);
+    background-color: #fff;
+    border: 1px solid var(--accent-light);
+    border-radius: 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sort-by .select {
+    width: auto;
+    min-width: 13rem;
+}
+
+.select:focus,
+.place-search:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(123, 150, 105, 0.25);
 }
 
 .sightings-body {
     display: flex;
-    gap: 3rem;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.sightings-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .sightings-count {
@@ -259,30 +301,84 @@ nav .divider {
 }
 
 .filter-option-container {
-    max-width: 15vw;
-    background-color: var(--surface );
-    padding: 5px 25px 10px 25px;
+    flex: 0 0 260px;
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface);
+    padding: 1.25rem 1.5rem 1.5rem;
     border-radius: var(--radius);
+}
+
+.filter-option-container h4 {
+    margin: 1.5rem 0 0.6rem;
+    color: var(--accent-dark);
 }
 
 .filter-option-heading {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-alt);
+}
+
+.filter-option-heading h3 {
+    margin: 0;
+}
+
+.clear-filters {
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter-checkbox {
+    display: flex;
     align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.filter-checkbox input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--accent-dark);
+}
+
+.filter-hint {
+    margin: -0.25rem 0 0.6rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.filter-option,
+.terrain-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
 }
 
 .filter-category-btn {
-    padding: 0.75rem 1rem;
+    padding: 0.35rem 0.8rem;
     font: inherit;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 0.85rem;
     color: var(--text-alt);
     background: var(--surface);
     border: 1px solid var(--accent);
     border-radius: 30px;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
-    margin: 0 10px 0 0;
+}
+
+.filter-category-btn:hover {
+    background: var(--accent-light);
 }
 
 .filter-category-btn.selected {
@@ -294,8 +390,20 @@ nav .divider {
 .sightings-grid {
     display: grid;
     margin-top: 10px;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+}
+
+@media (max-width: 800px) {
+    .sightings-body {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-option-container {
+        flex-basis: auto;
+        position: static;
+    }
 }
 
 .sightings-card {

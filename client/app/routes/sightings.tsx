@@ -53,28 +53,29 @@ export default function Sightings() {
           <p>Every sighting recorded by the community, newest first unless you choose otherwise.</p>
         </div>
         <div className="heading-right">
-          <span>
-            <p>Sort by</p>
+          <label className="sort-by">
+            Sort by
             <select
+              className="select"
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
             >
               <option value="newest">Newest sighting first</option>
               <option value="oldest">Oldest sighting first</option>
             </select>
-          </span>
+          </label>
         </div>
       </section>
       <section className="sightings-body">
         <div className="filter-option-container">
           <div className="filter-option-heading">
             <h3>Filters</h3>
-            <a style={{ textDecoration: 'underline', cursor: 'pointer' }}>Clear all</a> {/* onclick remove all filters */}
+            <a className="clear-filters">Clear all</a> {/* onclick remove all filters */}
           </div>
-          <span style={{ display: 'flex', gap: '0.5rem' }}>
+          <label className="filter-checkbox">
             <input type='checkbox' name='mySightings' />
-            <p>Only my sightings</p>
-          </span>
+            Only my sightings
+          </label>
           <h4>Species category</h4>
           <div className="species-options">
             <div className="filter-option">
@@ -96,6 +97,7 @@ export default function Sightings() {
           <h4>Region</h4>
 
           <select
+            className="select"
             value={selectedRegion}
             onChange={e => setSelectedRegion(e.target.value)}
           >
@@ -115,7 +117,7 @@ export default function Sightings() {
             onChange={e => setPlaceSearch(e.target.value)}
           />
           <h4>Terrain feature</h4>
-          <p>Show sightings at places with any selected features</p>
+          <p className="filter-hint">Show sightings at places with any selected features</p>
           <div className="terrain-options">
             {/* Change to a drop down multi select */}
             {terrains?.map((terrain) => {
