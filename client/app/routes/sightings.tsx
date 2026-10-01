@@ -1,9 +1,25 @@
 import { useState, useEffect } from "react";
+import { useUser } from '../lib/use-user';
 import type { SpeciesCategory, Region, Terrain, Sighting } from '../types';
 import { api } from '../lib/api';
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };
+
+
+function AuthStatus() {
+  const user = useUser();
+
+  if (user) {
+    return (
+      <label className="filter-checkbox">
+        <input type='checkbox' name='mySightings' />
+        Only my sightings
+      </label>
+    );
+  }
+}
+
 
 export default function Sightings() {
   const [sortBy, setSortBy] = useState('DESC');
@@ -99,10 +115,7 @@ export default function Sightings() {
             <h3>Filters</h3>
             <a className="clear-filters" onClick={() => clearFilters()}>Clear all</a> {/* onclick remove all filters */}
           </div>
-          <label className="filter-checkbox">
-            <input type='checkbox' name='mySightings' />
-            Only my sightings
-          </label>
+          <AuthStatus />
           <h4>Species category</h4>
           <div className="species-options">
             <div className="filter-option">
