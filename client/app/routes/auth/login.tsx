@@ -65,7 +65,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
         </Form>
         <Link to="/register" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>Or click here to register</Link>
         <div className='break' style={{margin: "15px"}} />
-        <Link to="/" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to dashboard.</Link>
+        <Link to="/" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to dashboard</Link>
       </div>
     </div>
   );
