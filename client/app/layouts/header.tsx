@@ -1,5 +1,5 @@
-import { useUser } from '../lib/use-user'
-import { Link } from 'react-router'
+import { useUser } from '../lib/use-user';
+import { Link } from 'react-router';
 import { logout } from '../lib/signout';
 import logoMarkURL from "../assets/logo-mark.svg";
 
