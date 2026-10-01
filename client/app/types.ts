@@ -69,3 +69,10 @@ export interface Sighting {
   observer_name?: string;
   terrain_features: string;
 }
+
+export interface Count {
+  users_count: number;
+  species_count: number;
+  sightings_count: number;
+  region_count: number;
+}
