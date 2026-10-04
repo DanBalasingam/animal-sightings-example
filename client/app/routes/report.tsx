@@ -34,7 +34,7 @@ export default function Report() {
                 <label>Notes</label>
                 <p>(optional)</p>
               </div>
-              <input type="text" />
+              <textarea id="notes" name="notes" rows={4} />
             </fieldset>
             <fieldset>
               <div>
