@@ -9,6 +9,7 @@
     --accent-dark-alt: #364232;
     --text: #f3f3f3;
     --text-alt: #333333;
+    --text-hint: #4d4d4d;
     --surface: #F7F7F7;
     --surface-alt: #080808;
     --radius: 10px;
@@ -16,6 +17,9 @@
     --border: rgba(255, 255, 255, 0.2);
     --border-alt: rgba(128, 128, 128, 0.3);
     --text-muted: rgba(255, 255, 255, 0.7);
+    --danger: #b3261e;
+
+    --focus-ring: 0 0 0 3px rgba(123, 150, 105, 0.25);
 }
 
 html,
@@ -715,4 +719,200 @@ nav .divider {
 
 .species-body th {
     border-bottom: 2px solid var(--accent);
+}
+
+
+/* Report */
+.report-content {
+    width: 100%;
+    max-width: 640px;
+    margin-inline: auto;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.report-content h1 {
+    text-align: left;
+}
+
+.report-form-container {
+    background: var(--surface);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+}
+
+.report-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.report-form-container fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.report-form-container label {
+    color: var(--accent-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.report-form-container p {
+    margin: 0;
+    color: var(--text-hint);
+    font-size: 0.8125rem;
+}
+
+.report-form-container fieldset > div:has(> label + p) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.report-form-container fieldset > div:has(> label + p) p {
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.report-form-container input:not([type="file"]),
+.report-form-container textarea,
+.report-form-container select {
+    width: 100%;
+    height: 44px;
+    padding: 0 0.8rem;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text-alt);
+    background: #fff;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.report-form-container textarea {
+    height: auto;
+    min-height: 112px;
+    padding: 0.65rem 0.8rem;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.report-form-container input::placeholder,
+.report-form-container textarea::placeholder {
+    color: #6b6b6b;
+}
+
+.report-form-container input:focus-visible,
+.report-form-container textarea:focus-visible,
+.report-form-container select:focus-visible {
+    outline: none;
+    border-color: var(--accent-dark);
+    box-shadow: var(--focus-ring);
+}
+
+.report-form-container input:user-invalid,
+.report-form-container textarea:user-invalid {
+    border: 2px solid var(--danger);
+}
+
+.report-form-container .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.report-form-container .date-col,
+.report-form-container .num-seen-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.report-form-container input[type="file"] {
+    width: 100%;
+    padding: 1.25rem;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--text-hint);
+    background: #fff;
+    border: 2px dashed var(--accent);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.report-form-container input[type="file"]:hover {
+    border-color: var(--accent-dark);
+}
+
+.report-form-container input[type="file"]:focus-visible {
+    outline: none;
+    border-color: var(--accent-dark);
+    box-shadow: var(--focus-ring);
+}
+
+.report-form-container input[type="file"]::file-selector-button {
+    margin-right: 1rem;
+    height: 40px;
+    padding: 0 1rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-dark);
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.report-form-container input[type="file"]::file-selector-button:hover {
+    background: var(--accent-light);
+}
+
+.report-form-container .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bg);
+}
+
+.report-form-container button[type="submit"] {
+    height: 44px;
+    padding: 0 1.25rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--accent-dark);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.report-form-container button[type="submit"]:hover {
+    background: var(--accent-dark-alt);
+}
+
+.report-form-container button[type="submit"]:focus-visible {
+    outline: 3px solid var(--accent-dark);
+    outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+    .report-form-container {
+        padding: 1.25rem;
+    }
+
+    .report-form-container .form-grid {
+        grid-template-columns: 1fr;
+    }
 }
