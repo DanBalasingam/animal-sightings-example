@@ -5,6 +5,7 @@ export default [
     index("routes/home.tsx"),
     route("sightings", "routes/sightings.tsx"),
     route("species", "routes/species.tsx"),
+    route("/report-sighting", "routes/report.tsx"),
     route("*", "routes/not-found.tsx"),
   ]),
   layout('layouts/auth-layout.tsx', [
