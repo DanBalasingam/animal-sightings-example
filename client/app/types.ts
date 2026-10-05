@@ -76,3 +76,8 @@ export interface Count {
   sightings_count: number;
   region_count: number;
 }
+
+export interface Location {
+  name: string;
+  region: string;
+}
