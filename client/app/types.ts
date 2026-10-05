@@ -23,16 +23,9 @@ export interface RegisterRequest extends LoginRequest {
   name: string;
 }
 
-export interface SightingRequest {
-  species_id: number;
-  location_id: number;
-  individual_count: number;
-  datetime: string;
-  notes: string;
-}
-
 export interface SightingResponse {
   id: number;
+  image: string | null;
 }
 
 export interface Specie {

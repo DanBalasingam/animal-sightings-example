@@ -1,9 +1,11 @@
 import { Form, Link, redirect, useNavigation } from "react-router";
 import { useState, useEffect, useMemo } from "react";
 import type { Route } from './+types/report';
-import type { Specie, Location, SightingRequest, SightingResponse } from '../types';
+import type { Specie, Location, SightingResponse } from '../types';
 import { api, ApiError } from '../lib/api';
 import { Autocomplete, type AutocompleteOption } from "../components/Autocomplete";
+
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
@@ -11,13 +13,17 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const location_id = Number(form.get('location_id'));
   if (!species_id) return { error: 'Please pick a species from the list' };
   if (!location_id) return { error: 'Please pick a location from the list' };
-  const body: SightingRequest = {
-    species_id,
-    location_id,
-    individual_count: Number(form.get('individual_count')),
-    datetime: String(form.get('datetime') ?? ''),
-    notes: String(form.get('notes') ?? ''),
-  };
+  const photo = form.get('photo');
+  if (photo instanceof File && photo.size > MAX_PHOTO_BYTES) return { error: 'Photo must be under 10 MB' };
+
+  const body = new FormData();
+  body.append('species_id', String(species_id));
+  body.append('location_id', String(location_id));
+  body.append('individual_count', String(form.get('individual_count') ?? ''));
+  body.append('datetime', String(form.get('datetime') ?? ''));
+  body.append('notes', String(form.get('notes') ?? ''));
+  // An empty file input still submits a nameless 0-byte File
+  if (photo instanceof File && photo.size > 0) body.append('photo', photo);
   try {
     await api<SightingResponse>('/sightings', { method: 'POST', body });
   } catch (e) {
@@ -77,7 +83,7 @@ export default function Report({ actionData }: Route.ComponentProps) {
         <Link to="/sightings" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to sightings</Link>
         <h1>Report a sighting</h1>
         <div className="report-form-container">
-          <Form method="post">
+          <Form method="post" encType="multipart/form-data">
             {(actionData?.error || error) && <div className='error-box'><p role="alert">⚠ {actionData?.error ?? error?.message}</p></div>}
             <input type="hidden" name="species_id" value={speciesId} />
             <input type="hidden" name="location_id" value={locationId} />
@@ -112,7 +118,7 @@ export default function Report({ actionData }: Route.ComponentProps) {
                 <label>Photo</label>
                 <p>(optional)</p>
               </div>
-              <input type="file" />
+              <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" />
             </fieldset>
             <button type="submit" className="btn btn-primary" disabled={submitting}><span>Submit sighting</span></button>
           </Form>
