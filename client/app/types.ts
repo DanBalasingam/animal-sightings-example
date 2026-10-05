@@ -23,6 +23,18 @@ export interface RegisterRequest extends LoginRequest {
   name: string;
 }
 
+export interface SightingRequest {
+  species_id: number;
+  location_id: number;
+  individual_count: number;
+  datetime: string;
+  notes: string;
+}
+
+export interface SightingResponse {
+  id: number;
+}
+
 export interface Specie {
   id: number;
   common_name: string;
@@ -78,6 +90,7 @@ export interface Count {
 }
 
 export interface Location {
+  id: number;
   name: string;
   region: string;
 }
