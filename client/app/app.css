@@ -916,3 +916,41 @@ nav .divider {
         grid-template-columns: 1fr;
     }
 }
+
+.autocomplete {
+    position: relative;
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.autocomplete-option {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0.8rem;
+    color: var(--text-alt);
+    cursor: pointer;
+}
+
+.autocomplete-option small {
+    color: var(--text-hint);
+    font-size: 0.8rem;
+}
+
+.autocomplete-option.active {
+    background: var(--accent-light);
+}
