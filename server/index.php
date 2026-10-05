@@ -49,10 +49,10 @@ try {
 
         case 'POST /api/v1/register':
         {
-            $data  = body();
+            $data = body();
             $email = strtolower(trim($data['email'] ?? ''));
-            $name  = trim($data['name'] ?? '');
-            $pw    = $data['password'] ?? '';
+            $name = trim($data['name'] ?? '');
+            $pw = $data['password'] ?? '';
             if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $name === '' || strlen($pw) < 8) {
                 response(['error' => 'Invalid input'], 422);
             }
@@ -102,14 +102,6 @@ try {
             $user ? response(['user' => $user], 200) : response(['error' => 'Not authenticated'], 401);
         }
 
-        // case 'GET /api/v1/users':
-        // {
-        //     $users = db()
-        //         ->query('SELECT * FROM user')
-        //         ->fetchAll();
-        //     response($users);
-        // }
-
         case 'GET /api/v1/species':
         {
             $where  = [];
@@ -131,6 +123,7 @@ try {
             }
 
             $sql = "SELECT
+                    sp.id,
                     sp.common_name,
                     sp.scientific_name,
                     sp.maori_name,
@@ -280,12 +273,43 @@ try {
 
         case 'POST /api/v1/sightings':
         {
-            response('WIP', 200);
+            $data = body();
+            $species_id = filter_var($data['species_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $location_id = filter_var($data['location_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $individual_count = filter_var($data['individual_count'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $notes = trim($data['notes'] ?? '');
+            $timestamp = strtotime(trim($data['datetime'] ?? ''));
+            if ($species_id === false || $location_id === false || $individual_count === false || $timestamp === false) {
+                response(['error' => 'Invalid input'], 422);
+            }
+
+            $stmt = db()->prepare('SELECT 1 FROM species WHERE id = ?');
+            $stmt->execute([$species_id]);
+            if (!$stmt->fetchColumn()) response(['error' => 'Unknown species'], 422);
+
+            $stmt = db()->prepare('SELECT 1 FROM location WHERE id = ?');
+            $stmt->execute([$location_id]);
+            if (!$stmt->fetchColumn()) response(['error' => 'Unknown location'], 422);
+
+            $user = current_user();
+            $now = gmdate('Y-m-d\TH:i:s');
+            db()->prepare('INSERT INTO sighting (species_id, observer_user_id, sighting_location_id, individual_count, notes, sighting_datetime, created_at)
+                           VALUES (?, ?, ?, ?, ?, ?, ?)')
+                ->execute([
+                    $species_id,
+                    $user['id'] ?? null,
+                    $location_id,
+                    $individual_count,
+                    $notes === '' ? null : $notes,
+                    gmdate('Y-m-d\TH:i:s', $timestamp),
+                    $now,
+                ]);
+            response(['id' => (int) db()->lastInsertId()], 201);
         }
 
         case 'GET /api/v1/locations':
         {
-            $stmt = db()->prepare('SELECT name, region FROM location');
+            $stmt = db()->prepare('SELECT id, name, region FROM location');
             $stmt->execute();
             $locations = $stmt->fetchAll();
             response($locations, 200);
