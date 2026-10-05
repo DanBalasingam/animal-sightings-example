@@ -207,7 +207,9 @@ export default function Sightings() {
               return (
                 <div key={sighting.id} className="sightings-card">
                   <div className="card-image">
-
+                    {sighting.sighting_image
+                      ? <img src={`/api/v1/images/${sighting.sighting_image}`} alt={`${sighting.common_name} sighting`} loading="lazy" />
+                      : <span>No photo</span>}
                   </div>
                   <div className="card-body">
                     <div className="card-header">
