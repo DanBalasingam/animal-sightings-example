@@ -1,7 +1,47 @@
 import { Link } from "react-router";
+import { useState, useEffect, useMemo } from "react";
+import type { Specie, Location } from '../types';
+import { api } from '../lib/api';
+import { Autocomplete, type AutocompleteOption } from "../components/Autocomplete";
 
 
 export default function Report() {
+  const [species, setSpecies] = useState<Specie[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [nameQuery, setNameQuery] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    api<Specie[]>('/species', { method: 'GET' })
+      .then((data) => setSpecies(data))
+      .catch ((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      })
+    api<Location[]>('/locations', { method: 'GET' })
+      .then((data) => setLocations(data))
+      .catch((e) => {
+        if (e.name !== 'AbortError') setError(e);
+      })
+  }, [])
+
+  const specieOptions = useMemo<AutocompleteOption[]>(
+    () => species.map((r) => ({
+      label: r.common_name,
+      aliases: [r.maori_name, r.scientific_name].filter(Boolean),
+      hint: [r.maori_name, r.scientific_name].filter(Boolean).join(" · "),
+    })),
+    [species]
+  );
+
+  const locationOptions = useMemo<AutocompleteOption[]>(
+    () => locations.map((r) => ({
+      label: r.name,
+      aliases: [r.region].filter(Boolean),
+      hint: [r.region].filter(Boolean).join(" . "),
+    })),
+    [locations]
+  )
 
   return (
     <div className="container">
@@ -12,12 +52,12 @@ export default function Report() {
           <form>
             <fieldset>
               <label>Species *</label>
-              <input type="text" required={true} placeholder="Enter species" />
+              <Autocomplete options={specieOptions} value={nameQuery} onChange={setNameQuery} placeholder="Enter species" />
               <p>Type part of any name. (Macrons are optional)</p>
             </fieldset>
             <fieldset>
               <label>Location *</label>
-              <input type="text" required={true} placeholder="E.g. Westport, West Coast" />
+              <Autocomplete options={locationOptions} value={locationQuery} onChange={setLocationQuery} placeholder="E.g. Westport, West Coast" />
             </fieldset>
             <fieldset className="form-grid">
               <div className="date-col">
