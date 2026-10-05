@@ -283,6 +283,14 @@ try {
             response('WIP', 200);
         }
 
+        case 'GET /api/v1/locations':
+        {
+            $stmt = db()->prepare('SELECT name, region FROM location');
+            $stmt->execute();
+            $locations = $stmt->fetchAll();
+            response($locations, 200);
+        }
+
         case 'GET /api/v1/regions':
         {
             $stmt = db()->prepare('SELECT DISTINCT region FROM location');
