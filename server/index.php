@@ -273,7 +273,11 @@ try {
 
         case 'POST /api/v1/sightings':
         {
-            $data = body();
+            // Sent as multipart/form-data so a photo can be attached; PHP leaves both empty if the request is too large
+            if (str_starts_with($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data') && empty($_POST) && empty($_FILES)) {
+                response(['error' => 'Upload too large'], 413);
+            }
+            $data = $_POST ?: body();
             $species_id = filter_var($data['species_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
             $location_id = filter_var($data['location_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
             $individual_count = filter_var($data['individual_count'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
@@ -283,28 +287,66 @@ try {
                 response(['error' => 'Invalid input'], 422);
             }
 
-            $stmt = db()->prepare('SELECT 1 FROM species WHERE id = ?');
+            $stmt = db()->prepare('SELECT common_name FROM species WHERE id = ?');
             $stmt->execute([$species_id]);
-            if (!$stmt->fetchColumn()) response(['error' => 'Unknown species'], 422);
+            $common_name = $stmt->fetchColumn();
+            if (!$common_name) response(['error' => 'Unknown species'], 422);
 
             $stmt = db()->prepare('SELECT 1 FROM location WHERE id = ?');
             $stmt->execute([$location_id]);
             if (!$stmt->fetchColumn()) response(['error' => 'Unknown location'], 422);
 
+            $photo = $_FILES['photo'] ?? null;
+            $photo_ext = null;
+            if ($photo && $photo['error'] !== UPLOAD_ERR_NO_FILE) {
+                if ($photo['error'] === UPLOAD_ERR_INI_SIZE || $photo['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    response(['error' => 'Photo too large'], 413);
+                }
+                if ($photo['error'] !== UPLOAD_ERR_OK) response(['error' => 'Photo upload failed'], 400);
+                $types = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+                $photo_ext = $types[(new finfo(FILEINFO_MIME_TYPE))->file($photo['tmp_name'])] ?? null;
+                if ($photo_ext === null) response(['error' => 'Photo must be a JPEG, PNG or WebP'], 422);
+            }
+
             $user = current_user();
             $now = gmdate('Y-m-d\TH:i:s');
-            db()->prepare('INSERT INTO sighting (species_id, observer_user_id, sighting_location_id, individual_count, notes, sighting_datetime, created_at)
-                           VALUES (?, ?, ?, ?, ?, ?, ?)')
-                ->execute([
-                    $species_id,
-                    $user['id'] ?? null,
-                    $location_id,
-                    $individual_count,
-                    $notes === '' ? null : $notes,
-                    gmdate('Y-m-d\TH:i:s', $timestamp),
-                    $now,
-                ]);
-            response(['id' => (int) db()->lastInsertId()], 201);
+            $image_id = null;
+            $photo_path = null;
+            db()->beginTransaction();
+            try {
+                if ($photo_ext !== null) {
+                    // Match the existing naming, e.g. hector_s_dolphin_c6e6f9.jpg
+                    $slug = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($common_name)), '_');
+                    $filename = $slug . '_' . bin2hex(random_bytes(3)) . '.' . $photo_ext;
+                    $photo_path = __DIR__ . '/data/image/' . $filename;
+                    if (!move_uploaded_file($photo['tmp_name'], $photo_path)) {
+                        throw new RuntimeException('Could not save photo');
+                    }
+                    db()->prepare('INSERT INTO image (filename, uploaded_at) VALUES (?, ?)')
+                        ->execute([$filename, gmdate('Y-m-d H:i:s')]);
+                    $image_id = (int) db()->lastInsertId();
+                }
+                db()->prepare('INSERT INTO sighting (species_id, observer_user_id, sighting_location_id, individual_count, notes, sighting_datetime, created_at, sighting_image_id)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+                    ->execute([
+                        $species_id,
+                        $user['id'] ?? null,
+                        $location_id,
+                        $individual_count,
+                        $notes === '' ? null : $notes,
+                        gmdate('Y-m-d\TH:i:s', $timestamp),
+                        $now,
+                        $image_id,
+                    ]);
+                $sighting_id = (int) db()->lastInsertId();
+                db()->commit();
+            } catch (Throwable $e) {
+                db()->rollBack();
+                if ($photo_path && is_file($photo_path)) unlink($photo_path);
+                if ($e instanceof PDOException) throw $e;
+                response(['error' => $e->getMessage()], 500);
+            }
+            response(['id' => $sighting_id, 'image' => $filename ?? null], 201);
         }
 
         case 'GET /api/v1/locations':
