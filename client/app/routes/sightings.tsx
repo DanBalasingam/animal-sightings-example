@@ -8,13 +8,23 @@ const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };
 
 
-function AuthStatus() {
+type AuthStatusProps = {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}
+
+function AuthStatus({ checked, onChange }: AuthStatusProps) {
   const user = useUser();
 
   if (user) {
     return (
       <label className="filter-checkbox">
-        <input type='checkbox' name='mySightings' />
+        <input
+          type='checkbox'
+          name='mySightings'
+          checked={checked}
+          onChange={e => onChange(e.target.checked)}
+        />
         Only my sightings
       </label>
     );
@@ -33,6 +43,8 @@ export default function Sightings() {
   const [selectedTerrain, setSelectedTerrain] = useState<number[]>([]);
   const [sightings, setSightings] = useState<Sighting[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [onlyMine, setOnlyMine] = useState(false);
+  const user = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +74,8 @@ export default function Sightings() {
       if (placeSearch.trim() !== '') params.set('place', placeSearch.trim());
       if (selectedRegion !== ALL_REGION.region) params.set('region', selectedRegion);
       if (sortBy.trim() !== '') params.set('order', sortBy);
+      // Only send when logged in, otherwise the API rejects the request with a 401
+      if (onlyMine && user) params.set('user', 'me');
       if (selectedSpeciesId !== 0) {
         const category = categories.find((c) => c.id === selectedSpeciesId);
         if (category) params.set('category', category.name);
@@ -82,12 +96,13 @@ export default function Sightings() {
       cancelled = true;
       clearTimeout(timeout);
     }
-  }, [placeSearch, selectedRegion, sortBy, selectedSpeciesId, categories]);
+  }, [placeSearch, selectedRegion, sortBy, selectedSpeciesId, categories, onlyMine, user]);
 
   function clearFilters() {
     setSelectedSpeciesId(0);
     setSelectedRegion(ALL_REGION.region);
     setPlaceSearch('');
+    setOnlyMine(false);
   }
 
   return (
@@ -117,7 +132,7 @@ export default function Sightings() {
             <h3>Filters</h3>
             <a className="clear-filters" onClick={() => clearFilters()}>Clear all</a> {/* onclick remove all filters */}
           </div>
-          <AuthStatus />
+          <AuthStatus checked={onlyMine} onChange={setOnlyMine} />
           <h4>Species category</h4>
           <div className="species-options">
             <div className="filter-option">
