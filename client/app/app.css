@@ -1104,8 +1104,33 @@ nav .divider {
     font-size: 0.95rem;
 }
 
-.coords a {
+.coords .link-button {
+    padding: 0;
+    font: inherit;
     color: inherit;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.map-embed {
+    margin-top: 0.75rem;
+}
+
+.map-embed iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--accent-light);
+    border-radius: 8px;
+}
+
+.map-embed a {
+    display: inline-block;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--accent-dark);
 }
 
 .sighting-card .terrain-label {
