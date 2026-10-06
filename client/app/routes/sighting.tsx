@@ -15,6 +15,7 @@ export default function SightingDetail() {
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -62,7 +63,12 @@ export default function SightingDetail() {
     .split(',')
     .map((feature) => feature.trim())
     .filter(Boolean);
-  const mapUrl = `https://www.openstreetmap.org/?mlat=${data.latitude}&mlon=${data.longitude}#map=13/${data.latitude}/${data.longitude}`;
+  const lat = Number(data.latitude);
+  const lon = Number(data.longitude);
+  const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=13/${lat}/${lon}`;
+  // Roughly matches zoom 13 around the marker
+  const bbox = [lon - 0.03, lat - 0.02, lon + 0.03, lat + 0.02].join(',');
+  const mapEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
   const observer = data.observer_name ?? 'Anonymous';
   const isOwner = user != null && data.observer_id === user.id;
 
@@ -156,8 +162,21 @@ export default function SightingDetail() {
                 <h3>{data.location_name}</h3>
                 <p>{data.region} region</p>
                 <p className="coords">
-                  {Number(data.latitude).toFixed(4)}, {Number(data.longitude).toFixed(4)} &middot; <a href={mapUrl} target="_blank" rel="noreferrer">Open map</a>
+                  {lat.toFixed(4)}, {lon.toFixed(4)} &middot;{' '}
+                  <button type="button" className="link-button" onClick={() => setMapOpen((open) => !open)} aria-expanded={mapOpen}>
+                    {mapOpen ? 'Hide map' : 'Open map'}
+                  </button>
                 </p>
+                {mapOpen && (
+                  <div className="map-embed">
+                    <iframe
+                      src={mapEmbedUrl}
+                      title={`Map of ${data.location_name}`}
+                      loading="lazy"
+                    />
+                    <a href={mapUrl} target="_blank" rel="noreferrer">View full map</a>
+                  </div>
+                )}
                 {terrainFeatures.length > 0 && (
                   <>
                     <p className="terrain-label">Terrain features</p>
