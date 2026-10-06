@@ -84,7 +84,7 @@ parse_str(
 
 // Routes with an id in the path are matched here and given a {id} placeholder for the switch below
 $route_id = null;
-if (preg_match('#^(PUT) /api/v1/sightings/(\d+)$#', $method_path, $m)) {
+if (preg_match('#^(PUT|DELETE) /api/v1/sightings/(\d+)$#', $method_path, $m)) {
     $method_path = $m[1] . ' /api/v1/sightings/{id}';
     $route_id = (int) $m[2];
 }
@@ -419,6 +419,48 @@ try {
                     $route_id,
                 ]);
             response(['id' => $route_id], 200);
+        }
+
+        case 'DELETE /api/v1/sightings/{id}':
+        {
+            $me = current_user();
+            if ($me === null) response(['error' => 'Not authenticated'], 401);
+
+            $stmt = db()->prepare('SELECT observer_user_id, sighting_image_id FROM sighting WHERE id = ?');
+            $stmt->execute([$route_id]);
+            $sighting = $stmt->fetch();
+            if (!$sighting) response(['error' => 'Not found'], 404);
+            if ((int) $sighting['observer_user_id'] !== (int) $me['id']) {
+                response(['error' => 'You can only delete your own sightings'], 403);
+            }
+
+            $image_id = $sighting['sighting_image_id'];
+            $filename = null;
+            db()->beginTransaction();
+            try {
+                db()->prepare('DELETE FROM sighting WHERE id = ?')->execute([$route_id]);
+                // Images can be shared between sightings, so only remove one nothing else uses
+                if ($image_id !== null) {
+                    $stmt = db()->prepare('SELECT 1 FROM sighting WHERE sighting_image_id = ? LIMIT 1');
+                    $stmt->execute([$image_id]);
+                    if (!$stmt->fetchColumn()) {
+                        $stmt = db()->prepare('SELECT filename FROM image WHERE id = ?');
+                        $stmt->execute([$image_id]);
+                        $filename = $stmt->fetchColumn() ?: null;
+                        db()->prepare('DELETE FROM image WHERE id = ?')->execute([$image_id]);
+                    }
+                }
+                db()->commit();
+            } catch (Throwable $e) {
+                db()->rollBack();
+                throw $e;
+            }
+            // Removed after the commit so a failed delete never loses the file
+            if ($filename !== null) {
+                $path = __DIR__ . '/data/image/' . basename($filename);
+                if (is_file($path)) unlink($path);
+            }
+            response(['ok' => true], 200);
         }
 
         case 'GET /api/v1/locations':

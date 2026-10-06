@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import type { Sighting } from '../types';
-import { api } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { useUser } from '../lib/use-user';
 import { EditSightingForm } from '../components/EditSightingForm';
 
@@ -12,6 +12,9 @@ export default function SightingDetail() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const user = useUser();
+  const navigate = useNavigate();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -63,6 +66,20 @@ export default function SightingDetail() {
   const observer = data.observer_name ?? 'Anonymous';
   const isOwner = user != null && data.observer_id === user.id;
 
+  async function handleDelete() {
+    if (!data || !window.confirm(`Delete this ${data.common_name} sighting? This can't be undone.`)) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await api(`/sightings/${data.id}`, { method: 'DELETE' });
+      // Replace so the back button doesn't return to the deleted sighting
+      navigate('/sightings', { replace: true });
+    } catch (e) {
+      setDeleteError(e instanceof ApiError ? e.message : 'Could not delete sighting');
+      setDeleting(false);
+    }
+  }
+
   return (
     <div className="container">
       <div className="sighting-content">
@@ -76,9 +93,15 @@ export default function SightingDetail() {
             <p>Seen {humanReadableSD} &middot; recorded by {isOwner ? 'you' : observer}</p>
           </div>
           {isOwner && !editing && (
-            <button type="button" className="btn-secondary" onClick={() => setEditingId(id)}>Edit</button>
+            <div className="owner-actions">
+              <button type="button" className="btn-secondary" onClick={() => setEditingId(id)} disabled={deleting}>Edit</button>
+              <button type="button" className="btn-danger" onClick={handleDelete} disabled={deleting}>
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
           )}
         </div>
+        {deleteError && <div className='error-box'><p role="alert">⚠ {deleteError}</p></div>}
         {editing ? (
           <EditSightingForm
             sighting={data}
