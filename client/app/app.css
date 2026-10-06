@@ -994,6 +994,10 @@ nav .divider {
 }
 
 .sighting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
@@ -1125,4 +1129,15 @@ nav .divider {
     .sighting-body {
         grid-template-columns: 1fr;
     }
+}
+
+.sighting-header .btn-secondary,
+.edit-actions .btn-secondary {
+    cursor: pointer;
+}
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
 }

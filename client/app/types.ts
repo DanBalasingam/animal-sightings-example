@@ -55,6 +55,9 @@ export interface Region {
 
 export interface Sighting {
   id: number;
+  species_id: number;
+  location_id: number;
+  observer_id: number | null;
   num_seen: number;
   notes: string;
   sighting_datetime: string;
