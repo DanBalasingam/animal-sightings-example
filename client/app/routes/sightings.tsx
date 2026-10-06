@@ -33,7 +33,8 @@ function AuthStatus({ checked, onChange }: AuthStatusProps) {
 
 
 export default function Sightings() {
-  const [sortBy, setSortBy] = useState('DESC');
+  // "<column>:<direction>", matching the API's sort and order params
+  const [sortBy, setSortBy] = useState('date:DESC');
   const [selectedSpeciesId, setSelectedSpeciesId] = useState(0);
   const [categories, setCategories] = useState<SpeciesCategory[]>([ALL_CATEGORY]);
   const [regions, setRegions] = useState<Region[]>([ALL_REGION]);
@@ -73,7 +74,9 @@ export default function Sightings() {
       const params = new URLSearchParams();
       if (placeSearch.trim() !== '') params.set('place', placeSearch.trim());
       if (selectedRegion !== ALL_REGION.region) params.set('region', selectedRegion);
-      if (sortBy.trim() !== '') params.set('order', sortBy);
+      const [sort, order] = sortBy.split(':');
+      params.set('sort', sort);
+      params.set('order', order);
       // Only send when logged in, otherwise the API rejects the request with a 401
       if (onlyMine && user) params.set('user', 'me');
       if (selectedSpeciesId !== 0) {
@@ -120,8 +123,14 @@ export default function Sightings() {
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
             >
-              <option value="DESC">Newest sighting first</option>
-              <option value="ASC">Oldest sighting first</option>
+              <option value="date:DESC">Newest sighting first</option>
+              <option value="date:ASC">Oldest sighting first</option>
+              <option value="common_name:ASC">Common name (A–Z)</option>
+              <option value="common_name:DESC">Common name (Z–A)</option>
+              <option value="maori_name:ASC">Māori name (A–Z)</option>
+              <option value="maori_name:DESC">Māori name (Z–A)</option>
+              <option value="scientific_name:ASC">Scientific name (A–Z)</option>
+              <option value="scientific_name:DESC">Scientific name (Z–A)</option>
             </select>
           </label>
         </div>
@@ -169,7 +178,7 @@ export default function Sightings() {
             type="text"
             name="place-search"
             className="place-search"
-            placeholder="Town, hut, track..."
+            placeholder="Otaki, Nelson, etc..."
             value={placeSearch}
             onChange={e => setPlaceSearch(e.target.value)}
           />

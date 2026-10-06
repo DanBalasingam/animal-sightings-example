@@ -2,8 +2,6 @@
 
 require_once 'db.php';
 
-// GET /api/v1/images/{filename} streams a sighting image. Handled before the session starts so the
-// response carries no cookie and can be cached, and because the switch below only matches exact paths
 $image_path = $_SERVER['REQUEST_METHOD'] . ' ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (preg_match('#^GET /api/v1/images/([a-z0-9_]+\.(?:jpe?g|png|webp))$#', $image_path, $m)) {
     $path = __DIR__ . '/data/image/' . $m[1];
@@ -37,7 +35,19 @@ function body() {
     return json_decode(file_get_contents('php://input'), true) ?? [];
 }
 
-// Validates the editable sighting fields shared by create and update, responding with an error if any are bad
+function sort_clause(array $query_params, array $columns, string $default_sort, string $default_order): string {
+    $sort = $query_params['sort'] ?? '';
+    $column = $columns[$sort] ?? $columns[$default_sort];
+
+    $order = strtoupper(trim($query_params['order'] ?? ''));
+    if ($order !== 'ASC' && $order !== 'DESC') {
+        $order = $default_order;
+    }
+
+    // Keep blank values (e.g. no Maori name) at the end whichever way it's sorted
+    return "{$column} IS NULL, {$column} COLLATE NOCASE {$order}";
+}
+
 function sighting_input(array $data): array {
     $species_id = filter_var($data['species_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     $location_id = filter_var($data['location_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
@@ -199,8 +209,12 @@ try {
                     sp.maori_name,
                     sc.name,
                     tc.name,
-                    sp.population_estimate
-                ORDER BY sp.common_name';
+                    sp.population_estimate';
+            $sql .= ' ORDER BY ' . sort_clause($query_params, [
+                'common_name' => 'sp.common_name',
+                'maori_name' => 'sp.maori_name',
+                'scientific_name' => 'sp.scientific_name',
+            ], 'common_name', 'ASC');
 
             $stmt = db()->prepare($sql);
             $stmt->execute($params);
@@ -273,11 +287,6 @@ try {
             }
             // TODO: add terrain feature query...
 
-            $order = trim(strtoupper($query_params['order'] ?? ''));
-            if (($order === '') || (($order !== 'ASC') && ($order !== 'DESC'))) {
-                $order = 'DESC';
-            }
-
             $sql = "SELECT
                         si.id,
                         si.species_id,
@@ -325,7 +334,12 @@ try {
                 $sql .= ' WHERE ' . implode(' AND ', $where);
             }
 
-            $sql .= " ORDER BY si.created_at {$order} ";
+            $sql .= ' ORDER BY ' . sort_clause($query_params, [
+                'date' => 'si.created_at',
+                'common_name' => 'sp.common_name',
+                'maori_name' => 'sp.maori_name',
+                'scientific_name' => 'sp.scientific_name',
+            ], 'date', 'DESC');
             $stmt = db()->prepare($sql);
             $stmt->execute($params);
             $sightings = $stmt->fetchAll();
@@ -334,7 +348,8 @@ try {
 
         case 'POST /api/v1/sightings':
         {
-            // Sent as multipart/form-data so a photo can be attached; PHP leaves both empty if the request is too large
+            // Sent as multipart/form-data so a photo can be attached
+            // PHP leaves both empty if the request is too large
             if (str_starts_with($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data') && empty($_POST) && empty($_FILES)) {
                 response(['error' => 'Upload too large'], 413);
             }

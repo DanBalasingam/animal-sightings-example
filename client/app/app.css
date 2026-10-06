@@ -411,6 +411,8 @@ nav .divider {
 }
 
 .sightings-card {
+    display: flex;
+    flex-direction: column;
     background-color: var(--surface);
     border-radius: var(--radius);
     padding: 0;
@@ -436,6 +438,9 @@ nav .divider {
 }
 
 .card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     padding: 5px 20px 20px 20px;
 }
 
@@ -533,6 +538,8 @@ nav .divider {
 
 .card-info {
     display: flex;
+    /* Pushes the info row and footer to the bottom of the card */
+    margin-top: auto;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-alt);
     margin-bottom: 10px;
@@ -705,6 +712,15 @@ nav .divider {
     gap: 3rem;
 }
 
+.species-count {
+    display: flex;
+    justify-content: space-between;
+}
+
+.species-count .clear-filters {
+    align-self: center;
+}
+
 .filter-group {
     display: flex;
     flex-direction: column;
@@ -739,6 +755,33 @@ nav .divider {
 
 .species-body th {
     border-bottom: 2px solid var(--accent);
+}
+
+.sort-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+    font: inherit;
+    font-weight: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sort-heading:hover,
+.sort-heading.active {
+    color: var(--accent-dark);
+}
+
+.sort-arrow {
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+
+.sort-heading.active .sort-arrow {
+    opacity: 1;
 }
 
 
