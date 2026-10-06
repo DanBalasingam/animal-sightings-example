@@ -10,3 +10,6 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Local SQLite database (rebuild from server/data/sql)
+server/data/sqlite.db
