@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useUser } from '../lib/use-user';
 import type { SpeciesCategory, Region, Terrain, Sighting } from '../types';
 import { api } from '../lib/api';
+import { useNavigate } from 'react-router';
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };
@@ -32,6 +33,7 @@ export default function Sightings() {
   const [selectedTerrain, setSelectedTerrain] = useState<number[]>([]);
   const [sightings, setSightings] = useState<Sighting[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api<SpeciesCategory[]>('/species/categories', { method: 'GET' })
@@ -205,7 +207,7 @@ export default function Sightings() {
                 .filter(Boolean);
 
               return (
-                <div key={sighting.id} className="sightings-card">
+                <div key={sighting.id} className="sightings-card" onClick={() => navigate(`/sighting?id=${sighting.id}`)}>
                   <div className="card-image">
                     {sighting.sighting_image
                       ? <img src={`/api/v1/images/${sighting.sighting_image}`} alt={`${sighting.common_name} sighting`} loading="lazy" />

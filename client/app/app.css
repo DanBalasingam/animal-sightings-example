@@ -414,6 +414,7 @@ nav .divider {
     background-color: var(--surface);
     border-radius: var(--radius);
     padding: 0;
+    cursor: pointer;
 }
 .card-image {
     display: flex;
@@ -972,4 +973,156 @@ nav .divider {
 
 .autocomplete-option.active {
     background: var(--accent-light);
+}
+
+/* Sighting detail page */
+.sighting-content {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: var(--accent-dark);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.sighting-header {
+    margin-bottom: 1.5rem;
+}
+
+.sighting-header .tag {
+    font-size: 0.85rem;
+}
+
+.sighting-header h1 {
+    margin: 0.6rem 0 0.35rem;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    text-align: left;
+}
+
+.sighting-header p {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text-hint);
+}
+
+.sighting-body {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 1.75rem;
+    align-items: start;
+}
+
+.sighting-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.sighting-card {
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.sighting-card h3 {
+    margin: 0 0 0.3rem;
+    font-size: 1.5rem;
+}
+
+.sighting-card p {
+    margin: 0 0 0.2rem;
+    font-size: 1.05rem;
+}
+
+.sighting-card .card-label {
+    margin: 0 0 1.1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.image-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.image-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.image-card .no-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    background-color: var(--accent-light);
+    color: var(--accent-dark);
+}
+
+.image-card .image-caption {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.5rem;
+    margin: 1.1rem 0 0;
+}
+
+.detail-grid dt {
+    font-size: 0.85rem;
+}
+
+.detail-grid dd {
+    margin: 0.1rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.sighting-card .coords {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.coords a {
+    color: inherit;
+}
+
+.sighting-card .terrain-label {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
+
+.feature-tag {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 4px;
+    background: var(--bg-alt);
+    color: var(--text-alt);
+}
+
+.sighting-card .card-tags {
+    margin: 0.5rem 0 0;
+}
+
+@media (max-width: 800px) {
+    .sighting-body {
+        grid-template-columns: 1fr;
+    }
 }

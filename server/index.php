@@ -210,6 +210,13 @@ try {
                 $params[] = $me['id'];
             }
 
+            if (isset($query_params['id'])) {
+                $id = filter_var($query_params['id'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+                if ($id === false) response(['error' => 'Invalid id'], 422);
+                $where[] = 'si.id = ?';
+                $params[] = $id;
+            }
+
             $category = trim($query_params['category'] ?? '');
             if ($category !== '' && strtolower($category) !== 'all') {
                 $where[] = 'LOWER(sc.name) = LOWER(?)';
