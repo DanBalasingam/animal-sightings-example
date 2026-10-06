@@ -6,34 +6,31 @@ import { api } from '../lib/api';
 export default function SightingDetail() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
-  const [data, setData] = useState<Sighting | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  // Tagged with the id it was fetched for, so a result from a previous id is never shown
+  const [result, setResult] = useState<{ id: string; data?: Sighting; error?: Error } | null>(null);
 
   useEffect(() => {
+    if (!id) return;
     let cancelled = false;
-    setData(null);
-    setError(null);
-
-    if (!id) {
-      setError(new Error('No sighting id given'));
-      return;
-    }
 
     api<Sighting[]>(`/sightings?id=${encodeURIComponent(id)}`, { method: 'GET' })
       .then((sightings) => {
         if (cancelled) return;
         const sighting = sightings[0];
-        if (sighting) setData(sighting);
-        else setError(new Error('Sighting not found'));
+        setResult(sighting ? { id, data: sighting } : { id, error: new Error('Sighting not found') });
       })
       .catch((e) => {
-        if (!cancelled && e.name !== 'AbortError') setError(e);
+        if (!cancelled && e.name !== 'AbortError') setResult({ id, error: e });
       });
 
     return () => {
       cancelled = true;
     };
   }, [id]);
+
+  const current = result?.id === id ? result : null;
+  const error = id ? current?.error : new Error('No sighting id given');
+  const data = current?.data;
 
   if (error || !data) {
     return (
