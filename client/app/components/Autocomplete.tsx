@@ -2,9 +2,8 @@ import { useId, useMemo, useRef, useState } from "react";
 
 export type AutocompleteOption = {
   label: string;
-  // Extra names the option can be found by (e.g. Māori or scientific name)
+  // Extra names the option can be found by (e.g. Maori or scientific name)
   aliases?: string[];
-  // Secondary text shown under the label in the list
   hint?: string;
 };
 
@@ -16,7 +15,7 @@ type AutocompleteProps = {
   maxSuggestions?: number;
 };
 
-// Lowercase and strip diacritics so "maui" matches "Māui"
+// Lowercase and strip diacritics so "maui" matches "Maui"
 function normalise(s: string) {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 }
@@ -49,7 +48,6 @@ export function Autocomplete({
     return [...exact, ...starts, ...contains].slice(0, maxSuggestions);
   }, [options, value, maxSuggestions]);
 
-  // Nothing left to pick if the only suggestion is what's already typed
   const alreadySelected = suggestions.length === 1 && suggestions[0].label === value;
   const isOpen = open && suggestions.length > 0 && !alreadySelected;
 
