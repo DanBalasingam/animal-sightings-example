@@ -1,0 +1,13 @@
+/* Report */
+.report-content {
+    width: 100%;
+    max-width: 640px;
+    margin-inline: auto;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.report-content h1 {
+    text-align: left;
+}

@@ -1,0 +1,232 @@
+.sightings-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.heading-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 24rem;
+}
+
+.heading-left p {
+    margin: 0.5rem 0 0;
+}
+
+.sort-by {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-dark);
+    white-space: nowrap;
+}
+
+.select,
+.place-search {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text-alt);
+    background-color: #fff;
+    border: 1px solid var(--accent-light);
+    border-radius: 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sort-by .select {
+    width: auto;
+    min-width: 13rem;
+}
+
+.select:focus,
+.place-search:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(123, 150, 105, 0.25);
+}
+
+.sightings-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.sightings-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.sightings-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sightings-count h4,
+.sightings-count p {
+    margin: 0;
+}
+
+.filter-option-container {
+    flex: 0 0 260px;
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface);
+    padding: 1.25rem 1.5rem 1.5rem;
+    border-radius: var(--radius);
+}
+
+.filter-option-container h4 {
+    margin: 1.5rem 0 0.6rem;
+    color: var(--accent-dark);
+}
+
+.filter-option-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-alt);
+}
+
+.filter-option-heading h3 {
+    margin: 0;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.filter-checkbox input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--accent-dark);
+}
+
+.filter-hint {
+    margin: -0.25rem 0 0.6rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.sightings-grid {
+    display: grid;
+    margin-top: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 800px) {
+    .sightings-body {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-option-container {
+        flex-basis: auto;
+        position: static;
+    }
+}
+
+.sightings-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: 0;
+    cursor: pointer;
+}
+.card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background-color: var(--accent-light);
+    color: var(--accent-dark);
+    font-size: 0.9rem;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 5px 20px 20px 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.card-header p {
+    margin: 0;
+}
+
+.card-category {
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+}
+
+.terrain-tag {
+    font-weight: 500;
+    color: var(--accent-dark);
+    background: transparent;
+    border: 1px solid var(--accent);
+}
+
+.card-desc {
+    display: block;
+}
+.card-desc p,
+.card-desc h4 {
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+
+.location {
+    display: flex;
+    margin: 10px 0 0 0 !important;
+}
+
+.card-info {
+    display: flex;
+    /* Pushes the info row and footer to the bottom of the card */
+    margin-top: auto;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-alt);
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    display: block;
+}
+.card-footer p {
+    margin: 0;
+    padding: 0;
+}

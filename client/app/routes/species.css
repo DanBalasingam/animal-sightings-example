@@ -1,0 +1,83 @@
+.species-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.species-filters {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+}
+
+.species-count {
+    display: flex;
+    justify-content: space-between;
+}
+
+.species-count .clear-filters {
+    align-self: center;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0 10px 0;
+}
+
+.filter-group label {
+    margin: 0 0 6px 0;
+    color: var(--accent-dark);
+    font-weight: 501;
+}
+
+.filter-search {
+    padding: 10px;
+    width: 15vw;
+    font-size: 16px;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+}
+
+.species-body table {
+    border-collapse: collapse;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 6px;
+}
+
+.species-body th, td {
+    text-align: left;
+    padding: 15px;
+}
+
+.species-body th {
+    border-bottom: 2px solid var(--accent);
+}
+
+.sort-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+    font: inherit;
+    font-weight: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sort-heading:hover,
+.sort-heading.active {
+    color: var(--accent-dark);
+}
+
+.sort-arrow {
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+
+.sort-heading.active .sort-arrow {
+    opacity: 1;
+}

@@ -5,6 +5,7 @@ import keaImage from '../assets/kea_2d5851.jpg';
 import hectorsDolphinImage from '../assets/hector_s_dolphin_c6e6f9.jpg';
 import tuataraImage from '../assets/tuatara_0dbbfd.jpg';
 import kiwiImage from '../assets/kiwi.jpg';
+import './home.css';
 
 // always static, images in assets
 const featuredAnimals = [

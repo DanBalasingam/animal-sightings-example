@@ -4,6 +4,7 @@ import type { Route } from './+types/report';
 import type { Specie, Location, SightingResponse } from '../types';
 import { api, ApiError } from '../lib/api';
 import { Autocomplete, type AutocompleteOption } from "../components/Autocomplete";
+import './report.css';
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 

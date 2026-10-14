@@ -1,6 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import "./shared.css";
 
 export function meta() {
   return [{ title: "Sighting Dashboard" }];

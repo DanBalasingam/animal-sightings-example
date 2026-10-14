@@ -3,6 +3,7 @@ import { useUser } from '../lib/use-user';
 import type { SpeciesCategory, Region, Terrain, Sighting } from '../types';
 import { api } from '../lib/api';
 import { useNavigate } from 'react-router';
+import './sightings.css';
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };

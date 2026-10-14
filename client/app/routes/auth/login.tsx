@@ -4,6 +4,7 @@ import { api, ApiError } from '../../lib/api';
 import { getUser, safeRedirect } from '../../lib/auth';
 import type { LoginRequest, UserResponse } from '../../types';
 import { Link } from 'react-router';
+import './auth.css';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const user = await getUser();

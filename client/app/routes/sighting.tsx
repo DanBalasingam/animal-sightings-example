@@ -4,6 +4,7 @@ import type { Sighting } from '../types';
 import { api, ApiError } from '../lib/api';
 import { useUser } from '../lib/use-user';
 import { EditSightingForm } from '../components/EditSightingForm';
+import './sighting.css';
 
 export default function SightingDetail() {
   const [searchParams] = useSearchParams();

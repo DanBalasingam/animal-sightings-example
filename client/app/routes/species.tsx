@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Specie, SpeciesCategory } from '../types';
 import { api } from '../lib/api';
+import './species.css';
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 
