@@ -183,6 +183,13 @@ try {
                 $params[] = $category;
             }
 
+            if (isset($query_params['id'])) {
+                $id = filter_var($query_params['id'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+                if ($id === false) response(['error' => 'Invalid id'], 422);
+                $where[] = 'sp.id = ?';
+                $params[] = $id;
+            }
+
             $sql = "SELECT
                     sp.id,
                     sp.common_name,
@@ -268,6 +275,13 @@ try {
                 $params[] = $id;
             }
 
+            if (isset($query_params['species_id'])) {
+                $species_id = filter_var($query_params['species_id'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+                if ($species_id === false) response(['error' => 'Invalid species id'], 422);
+                $where[] = 'sp.id = ?';
+                $params[] = $species_id;
+            }
+
             $category = trim($query_params['category'] ?? '');
             if ($category !== '' && strtolower($category) !== 'all') {
                 $where[] = 'LOWER(sc.name) = LOWER(?)';
@@ -285,6 +299,7 @@ try {
                 $where[] = 'lc.name LIKE ?';
                 $params[] = '%' . $place . '%';
             }
+
             // TODO: add terrain feature query...
 
             $sql = "SELECT

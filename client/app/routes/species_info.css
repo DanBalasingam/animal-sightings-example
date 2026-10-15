@@ -1,0 +1,245 @@
+/* Species detail page */
+.species-info-content {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.species-info-content .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: var(--accent-dark);
+    text-decoration: none;
+}
+
+.species-info-content .back-link:hover {
+    text-decoration: underline;
+}
+
+.specie-details {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 2rem;
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    background: var(--surface);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.specie-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+}
+
+.specie-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.specie-img-placeholder {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    color: var(--accent-dark);
+    opacity: 0.4;
+}
+
+.specie-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.specie-info .threat-category .tag {
+    font-size: 0.85rem;
+}
+
+.specie-info h2 {
+    margin: 0.6rem 0 0.25rem;
+    color: var(--accent-dark);
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.specie-info h5 {
+    margin: 0 0 0.25rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--text-hint);
+}
+
+.specie-info > p {
+    margin: 0 0 1.5rem;
+    color: var(--text-hint);
+}
+
+.specie-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.grid-item,
+.kpi-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+}
+
+.grid-item {
+    background: var(--bg);
+}
+
+.grid-item p,
+.kpi-card p {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+}
+
+.grid-item strong {
+    font-size: 1.15rem;
+    color: var(--accent-dark);
+}
+
+.sightings-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sightings-heading h4 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--accent-dark);
+}
+
+.sightings-link {
+    color: var(--accent-dark);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.sightings-link:hover {
+    text-decoration: underline;
+}
+
+.specie-sightings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.sightings-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.kpi-card {
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.kpi-card strong {
+    font-size: 1.5rem;
+    color: var(--accent-dark);
+    overflow-wrap: anywhere;
+}
+
+.no-sightings {
+    margin: 0;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-hint);
+    background: var(--surface);
+    border-radius: var(--radius);
+}
+
+.specie-sightings .table-wrapper {
+    overflow-x: auto;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.specie-sightings table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.specie-sightings th,
+.specie-sightings td {
+    padding: 0.9rem 1.1rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.specie-sightings th {
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+    white-space: nowrap;
+    border-bottom: 2px solid var(--accent);
+}
+
+.specie-sightings tbody tr + tr td {
+    border-top: 1px solid var(--bg);
+}
+
+.sighting-row {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.sighting-row:hover {
+    background: var(--accent-light);
+}
+
+.sighting-row .region {
+    display: block;
+    font-weight: 600;
+}
+
+.sighting-row small {
+    color: var(--text-hint);
+}
+
+.sighting-row .notes {
+    max-width: 40ch;
+    color: var(--text-hint);
+}
+
+@media (max-width: 900px) {
+    .specie-details {
+        grid-template-columns: 1fr;
+    }
+
+    .sightings-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .specie-details {
+        padding: 1.25rem;
+    }
+
+    .specie-grid,
+    .sightings-kpis {
+        grid-template-columns: 1fr;
+    }
+}

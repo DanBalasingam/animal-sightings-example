@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import type { Specie, SpeciesCategory } from '../types';
 import { api } from '../lib/api';
 import './species.css';
@@ -33,6 +34,7 @@ function SortableHeading({ column, label, sort, onSort }: SortableHeadingProps) 
 }
 
 export default function Species() {
+  const navigate = useNavigate();
   const [filterSearch, setFilterSearch] = useState('');
   const [selectedId, setSelectedId] = useState(0);
   const [categories, setCategories] = useState<SpeciesCategory[]>([ALL_CATEGORY]);
@@ -150,9 +152,9 @@ export default function Species() {
           <tbody>
             {species && species.map(specie => {
               return (
-                <tr>
+                <tr key={specie.id} className="species-row" onClick={() => navigate(`/specie?id=${specie.id}`)}>
                   <td>{specie.common_name}</td>
-                  <td>{specie.maori_name ?? "⎯"}</td>
+                  <td>{specie.maori_name ?? "-"}</td>
                   <td>{specie.scientific_name}</td>
                   <td>{specie.species_category}</td>
                   <td>{specie.threat_category}</td>

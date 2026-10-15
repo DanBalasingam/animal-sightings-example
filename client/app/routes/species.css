@@ -55,6 +55,11 @@
     border-bottom: 2px solid var(--accent);
 }
 
+.species-row:hover {
+    background-color: var(--accent-light);
+    cursor: pointer;
+}
+
 .sort-heading {
     display: inline-flex;
     align-items: center;

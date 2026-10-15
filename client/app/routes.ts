@@ -7,6 +7,7 @@ export default [
     route("sighting", "routes/sighting.tsx"),
     route("species", "routes/species.tsx"),
     route("/report-sighting", "routes/report.tsx"),
+    route("/specie", "routes/species_info.tsx"),
     route("*", "routes/not-found.tsx"),
   ]),
   layout('layouts/auth-layout.tsx', [
