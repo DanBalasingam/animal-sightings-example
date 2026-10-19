@@ -89,6 +89,7 @@ export default function SightingDetail() {
 
   return (
     <div className="container">
+      <title>{`${data.common_name} sighting | NZ Animal Sightings`}</title>
       <div className="sighting-content">
         <Link to="/sightings" className="back-link">&larr; Back to sightings</Link>
         <div className="sighting-header">

@@ -7,6 +7,10 @@ import tuataraImage from '../assets/tuatara_0dbbfd.jpg';
 import kiwiImage from '../assets/kiwi.jpg';
 import './home.css';
 
+export function meta() {
+  return [{ title: 'NZ Animal Sightings' }];
+}
+
 // always static, images in assets
 const featuredAnimals = [
   { name: 'Kea', category: 'Bird', image: keaImage, blurb: 'A curious alpine parrot found only in the South Island.' },

@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { Specie, SpeciesCategory } from '../types';
 import { api } from '../lib/api';
 import './species.css';
+
+export function meta() {
+  return [{ title: 'Species | NZ Animal Sightings' }];
+}
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 
@@ -102,8 +106,9 @@ export default function Species() {
       </section>
       <section className="species-filters">
         <div className="filter-group">
-          <label>Search</label>
+          <label htmlFor="filter-search">Search</label>
           <input
+            id="filter-search"
             type="text"
             name="filter-search"
             placeholder="Any name"
@@ -113,14 +118,16 @@ export default function Species() {
           />
         </div>
         <div className="filter-group">
-          <label>Category</label>
-          <div className="filter-option">
+          <label id="category-label">Category</label>
+          <div className="filter-option" role="group" aria-labelledby="category-label">
             {categories.map((category) => {
               const isSelected = selectedId === category.id;
 
               return (
                 <button
                   key={category.id}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => setSelectedId(category.id)}
                   className={isSelected ? "filter-category-btn selected" : "filter-category-btn"}
                 >
@@ -134,7 +141,7 @@ export default function Species() {
       <section className="species-body">
         <div className="species-count">
           <p>Showing {species?.length} species</p>
-          <a className="clear-filters" onClick={() => clearFilters()}>Clear all filters</a>
+          <button type="button" className="clear-filters" onClick={clearFilters}>Clear all filters</button>
         </div>
         {error && <div><h4>{error.message}</h4></div>}
         <table>
@@ -153,7 +160,7 @@ export default function Species() {
             {species && species.map(specie => {
               return (
                 <tr key={specie.id} className="species-row" onClick={() => navigate(`/specie?id=${specie.id}`)}>
-                  <td>{specie.common_name}</td>
+                  <td><Link to={`/specie?id=${specie.id}`} className="row-link">{specie.common_name}</Link></td>
                   <td>{specie.maori_name ?? "-"}</td>
                   <td>{specie.scientific_name}</td>
                   <td>{specie.species_category}</td>

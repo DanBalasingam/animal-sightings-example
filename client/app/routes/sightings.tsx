@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { useUser } from '../lib/use-user';
 import type { SpeciesCategory, Region, Terrain, Sighting } from '../types';
 import { api } from '../lib/api';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import './sightings.css';
+
+export function meta() {
+  return [{ title: 'Sightings | NZ Animal Sightings' }];
+}
 
 const ALL_CATEGORY: SpeciesCategory = { id: 0, name: 'All' };
 const ALL_REGION: Region = { region: 'All Regions' };
@@ -47,7 +51,6 @@ export default function Sightings() {
   const [error, setError] = useState<Error | null>(null);
   const [onlyMine, setOnlyMine] = useState(false);
   const user = useUser();
-  const navigate = useNavigate();
 
   useEffect(() => {
     api<SpeciesCategory[]>('/species/categories', { method: 'GET' })
@@ -140,11 +143,11 @@ export default function Sightings() {
         <div className="filter-option-container">
           <div className="filter-option-heading">
             <h3>Filters</h3>
-            <a className="clear-filters" onClick={() => clearFilters()}>Clear all</a> {/* onclick remove all filters */}
+            <button type="button" className="clear-filters" onClick={clearFilters}>Clear all</button>
           </div>
           <AuthStatus checked={onlyMine} onChange={setOnlyMine} />
-          <h4>Species category</h4>
-          <div className="species-options">
+          <h4 id="category-heading">Species category</h4>
+          <div className="species-options" role="group" aria-labelledby="category-heading">
             <div className="filter-option">
               {categories.map((category) => {
                 const isSelected = selectedSpeciesId === category.id;
@@ -152,6 +155,8 @@ export default function Sightings() {
                 return (
                   <button
                     key={category.id}
+                    type="button"
+                    aria-pressed={isSelected}
                     onClick={() => setSelectedSpeciesId(category.id)}
                     className={isSelected ? "filter-category-btn selected" : "filter-category-btn"}
                   >
@@ -161,9 +166,10 @@ export default function Sightings() {
               })}
             </div>
           </div>
-          <h4>Region</h4>
+          <h4 id="region-heading">Region</h4>
 
           <select
+            aria-labelledby="region-heading"
             className="select"
             value={selectedRegion}
             onChange={e => setSelectedRegion(e.target.value)}
@@ -174,8 +180,9 @@ export default function Sightings() {
               )
             })}
           </select>
-          <h4>Place</h4>
+          <h4 id="place-heading">Place</h4>
           <input
+            aria-labelledby="place-heading"
             type="text"
             name="place-search"
             className="place-search"
@@ -183,9 +190,9 @@ export default function Sightings() {
             value={placeSearch}
             onChange={e => setPlaceSearch(e.target.value)}
           />
-          <h4>Terrain feature</h4>
-          <p className="filter-hint">Show sightings at places with any selected features</p>
-          <div className="terrain-options">
+          <h4 id="terrain-heading">Terrain feature</h4>
+          <p id="terrain-hint" className="filter-hint">Show sightings at places with any selected features</p>
+          <div className="terrain-options" role="group" aria-labelledby="terrain-heading" aria-describedby="terrain-hint">
             {/* Change to a drop down multi select */}
             {terrains?.map((terrain) => {
               const isSelected = selectedTerrain.includes(terrain.id);
@@ -201,6 +208,8 @@ export default function Sightings() {
               return (
                 <button
                   key={terrain.id}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={toggleTerrain}
                   className={isSelected ? "filter-category-btn selected" : "filter-category-btn"}
                 >
@@ -232,7 +241,7 @@ export default function Sightings() {
                 .filter(Boolean);
 
               return (
-                <div key={sighting.id} className="sightings-card" onClick={() => navigate(`/sighting?id=${sighting.id}`)}>
+                <Link key={sighting.id} className="sightings-card" to={`/sighting?id=${sighting.id}`}>
                   <div className="card-image">
                     {sighting.sighting_image
                       ? <img src={`/api/v1/images/${sighting.sighting_image}`} alt={`${sighting.common_name} sighting`} loading="lazy" />
@@ -267,7 +276,7 @@ export default function Sightings() {
                       <p>{humanReadableSD}</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>

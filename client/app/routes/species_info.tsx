@@ -74,6 +74,7 @@ export default function SpeciesInfo() {
 
   return (
     <div className="container">
+      <title>{`${specie.common_name} | NZ Animal Sightings`}</title>
       <div className='species-info-content'>
         <Link to="/species" className="back-link">&larr; Back to species</Link>
         <div className='specie-details'>
@@ -152,7 +153,7 @@ export default function SpeciesInfo() {
                   {sightings.map((s) => (
                     <tr key={s.id} className='sighting-row' onClick={() => navigate(`/sighting?id=${s.id}`)}>
                       <td>
-                        <span className='region'>{s.region}</span>
+                        <Link to={`/sighting?id=${s.id}`} className='region row-link'>{s.region}</Link>
                         <small>{s.location_name}</small>
                       </td>
                       <td className='notes'>{s.notes || '-'}</td>

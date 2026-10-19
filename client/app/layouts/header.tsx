@@ -13,7 +13,7 @@ function AuthStatus() {
   return (
     <>
       <span className='user-name'>{user.name}</span>
-      <a className='logout-btn' onClick={logout}>Sign out</a>
+      <button type='button' className='logout-btn' onClick={logout}>Sign out</button>
     </>
   );
 }
@@ -22,7 +22,7 @@ export default function NavHeader() {
 
   return (
     <nav>
-      <Link className="logo" to="/" aria-label="home" style={{ "textDecoration": "none", "display": "inline-flex", "alignItems": "center", "gap": "9px" }}>
+      <Link className="logo" to="/" aria-label="home">
         <img src={logoMarkURL} alt="" width="45" height="45" />
         <h5 className='nav-title'>NZ Animal Sightings</h5>
       </Link>

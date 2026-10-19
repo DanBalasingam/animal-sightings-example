@@ -13,6 +13,8 @@ type AutocompleteProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   maxSuggestions?: number;
+  id?: string;
+  describedBy?: string;
 };
 
 // Lowercase and strip diacritics so "maui" matches "Maui"
@@ -26,6 +28,8 @@ export function Autocomplete({
   onChange,
   placeholder,
   maxSuggestions = 8,
+  id,
+  describedBy,
 }: AutocompleteProps) {
   const listId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,8 +99,10 @@ export function Autocomplete({
     <div className="autocomplete">
       <input
         ref={inputRef}
+        id={id}
         type="text"
         role="combobox"
+        aria-describedby={describedBy}
         autoComplete="off"
         aria-expanded={isOpen}
         aria-controls={listId}

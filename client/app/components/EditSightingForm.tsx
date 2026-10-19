@@ -86,18 +86,19 @@ export function EditSightingForm({ sighting, onSaved, onCancel }: EditSightingFo
       <form onSubmit={handleSubmit}>
         {error && <div className='error-box'><p role="alert">⚠ {error}</p></div>}
         <fieldset>
-          <label>Species *</label>
-          <Autocomplete options={specieOptions} value={nameQuery} onChange={setNameQuery} placeholder="Enter species" />
-          <p>Type part of any name. (Macrons are optional)</p>
+          <label htmlFor="edit-species">Species *</label>
+          <Autocomplete options={specieOptions} value={nameQuery} onChange={setNameQuery} placeholder="Enter species" id="edit-species" describedBy="edit-species-hint" />
+          <p id="edit-species-hint">Type part of any name. (Macrons are optional)</p>
         </fieldset>
         <fieldset>
-          <label>Location *</label>
-          <Autocomplete options={locationOptions} value={locationQuery} onChange={setLocationQuery} placeholder="E.g. Westport, West Coast" />
+          <label htmlFor="edit-location">Location *</label>
+          <Autocomplete options={locationOptions} value={locationQuery} onChange={setLocationQuery} placeholder="E.g. Westport, West Coast" id="edit-location" />
         </fieldset>
         <fieldset className="form-grid">
           <div className="date-col">
-            <label>Date and time seen *</label>
+            <label htmlFor="edit-datetime">Date and time seen *</label>
             <input
+              id="edit-datetime"
               type="datetime-local"
               name="datetime"
               defaultValue={sighting.sighting_datetime.slice(0, 16)}
@@ -106,16 +107,16 @@ export function EditSightingForm({ sighting, onSaved, onCancel }: EditSightingFo
             />
           </div>
           <div className="num-seen-col">
-            <label>Number seen *</label>
-            <input type="number" name="individual_count" min={1} defaultValue={sighting.num_seen} required={true} />
+            <label htmlFor="edit-count">Number seen *</label>
+            <input id="edit-count" type="number" name="individual_count" min={1} defaultValue={sighting.num_seen} required={true} />
           </div>
         </fieldset>
         <fieldset>
           <div>
-            <label>Notes</label>
+            <label htmlFor="edit-notes">Notes</label>
             <p>(optional)</p>
           </div>
-          <textarea name="notes" rows={4} defaultValue={sighting.notes ?? ''} />
+          <textarea id="edit-notes" name="notes" rows={4} defaultValue={sighting.notes ?? ''} />
         </fieldset>
         <div className="edit-actions">
           <button type="button" className="btn-secondary" onClick={onCancel} disabled={saving}>Cancel</button>

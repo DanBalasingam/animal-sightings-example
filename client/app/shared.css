@@ -19,6 +19,10 @@ h1 {
     white-space: nowrap;
 }
 
+.logout-btn {
+    background: none;
+}
+
 .btn:hover, .login-btn:hover, .logout-btn:hover {
     background-color: var(--accent-dark-alt);
 }
@@ -36,7 +40,11 @@ h1 {
 }
 
 .clear-filters {
+    padding: 0;
+    font: inherit;
     font-size: 0.85rem;
+    background: none;
+    border: none;
     color: var(--accent-dark);
     text-decoration: underline;
     cursor: pointer;
@@ -375,4 +383,37 @@ h1 {
 
 .autocomplete-option.active {
     background: var(--accent-light);
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Puts the row's link on the whole row, so the row stays clickable while the link is what keyboards reach */
+.row-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.row-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+tr:has(.row-link) {
+    position: relative;
+}
+
+.back-link-right {
+    display: block;
+    text-align: right;
+}
+
+.back-link-right,
+.auth-link {
+    color: var(--accent-dark);
+    text-decoration: none;
 }

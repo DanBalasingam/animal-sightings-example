@@ -6,6 +6,10 @@ import { api, ApiError } from '../lib/api';
 import { Autocomplete, type AutocompleteOption } from "../components/Autocomplete";
 import './report.css';
 
+export function meta() {
+  return [{ title: 'Report a sighting | NZ Animal Sightings' }];
+}
+
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
@@ -81,7 +85,7 @@ export default function Report({ actionData }: Route.ComponentProps) {
   return (
     <div className="container">
       <div className="report-content">
-        <Link to="/sightings" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to sightings</Link>
+        <Link to="/sightings" className="back-link-right">&larr; Back to sightings</Link>
         <h1>Report a sighting</h1>
         <div className="report-form-container">
           <Form method="post" encType="multipart/form-data">
@@ -89,37 +93,37 @@ export default function Report({ actionData }: Route.ComponentProps) {
             <input type="hidden" name="species_id" value={speciesId} />
             <input type="hidden" name="location_id" value={locationId} />
             <fieldset>
-              <label>Species *</label>
-              <Autocomplete options={specieOptions} value={nameQuery} onChange={setNameQuery} placeholder="Enter species" />
-              <p>Type part of any name. (Macrons are optional)</p>
+              <label htmlFor="report-species">Species *</label>
+              <Autocomplete options={specieOptions} value={nameQuery} onChange={setNameQuery} placeholder="Enter species" id="report-species" describedBy="report-species-hint" />
+              <p id="report-species-hint">Type part of any name. (Macrons are optional)</p>
             </fieldset>
             <fieldset>
-              <label>Location *</label>
-              <Autocomplete options={locationOptions} value={locationQuery} onChange={setLocationQuery} placeholder="E.g. Westport, West Coast" />
+              <label htmlFor="report-location">Location *</label>
+              <Autocomplete options={locationOptions} value={locationQuery} onChange={setLocationQuery} placeholder="E.g. Westport, West Coast" id="report-location" />
             </fieldset>
             <fieldset className="form-grid">
               <div className="date-col">
-                <label>Date and time seen *</label>
-                <input type="datetime-local" name="datetime" max={new Date().toISOString().slice(0, 16)} required={true} />
+                <label htmlFor="report-datetime">Date and time seen *</label>
+                <input id="report-datetime" type="datetime-local" name="datetime" max={new Date().toISOString().slice(0, 16)} required={true} />
               </div>
               <div className="num-seen-col">
-                <label>Number seen *</label>
-                <input type="number" name="individual_count" min={1} defaultValue={1} required={true} />
+                <label htmlFor="report-count">Number seen *</label>
+                <input id="report-count" type="number" name="individual_count" min={1} defaultValue={1} required={true} />
               </div>
             </fieldset>
             <fieldset>
               <div>
-                <label>Notes</label>
+                <label htmlFor="report-notes">Notes</label>
                 <p>(optional)</p>
               </div>
-              <textarea id="notes" name="notes" rows={4} />
+              <textarea id="report-notes" name="notes" rows={4} />
             </fieldset>
             <fieldset>
               <div>
-                <label>Photo</label>
+                <label htmlFor="report-photo">Photo</label>
                 <p>(optional)</p>
               </div>
-              <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" />
+              <input id="report-photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" />
             </fieldset>
             <button type="submit" className="btn btn-primary" disabled={submitting}><span>Submit sighting</span></button>
           </Form>

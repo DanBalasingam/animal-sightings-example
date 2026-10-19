@@ -6,6 +6,10 @@ import type { RegisterRequest, UserResponse } from '../../types';
 import { Link } from 'react-router';
 import './auth.css';
 
+export function meta() {
+  return [{ title: 'Sign up | NZ Animal Sightings' }];
+}
+
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const user = await getUser();
   if (user) {
@@ -74,7 +78,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
             <button type="submit" className="btn btn-primary btn-block" disabled={submitting}><span>Sign Up</span></button>
           </div>
         </Form>
-        <Link to="/login" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>&larr; Back to login.</Link>
+        <Link to="/login" className="auth-link">&larr; Back to login.</Link>
       </div>
     </div>
   )

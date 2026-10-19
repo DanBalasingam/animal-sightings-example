@@ -27,9 +27,29 @@ nav {
     z-index: 100;
 }
 
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 8px;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    color: var(--text);
+    background: var(--accent-dark-alt);
+    border-radius: 0 0 6px 6px;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+main:focus {
+    outline: none;
+}
+
 .logo {
     display: flex;
     align-items: center;
+    gap: 9px;
     height: 100%;
     color: var(--text);
     text-decoration: none;

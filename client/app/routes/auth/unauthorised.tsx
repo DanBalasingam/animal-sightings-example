@@ -1,3 +1,7 @@
+export function meta() {
+  return [{ title: 'Unauthorized | NZ Animal Sightings' }];
+}
+
 export default function Unauthorised() {
   return (
     <div className="container-center">

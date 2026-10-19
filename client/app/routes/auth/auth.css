@@ -1,3 +1,7 @@
+.login-box .break {
+    margin: 15px;
+}
+
 .login-box {
     width: 100%;
     max-width: 380px;

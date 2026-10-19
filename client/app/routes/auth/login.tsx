@@ -6,6 +6,10 @@ import type { LoginRequest, UserResponse } from '../../types';
 import { Link } from 'react-router';
 import './auth.css';
 
+export function meta() {
+  return [{ title: 'Login | NZ Animal Sightings' }];
+}
+
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const user = await getUser();
   if (user) {
@@ -64,9 +68,9 @@ export default function Login({ actionData }: Route.ComponentProps) {
             <button type="submit" className="btn btn-primary btn-block" disabled={submitting}><span>Login</span></button>
           </div>
         </Form>
-        <Link to="/register" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B" }}>Or click here to register</Link>
-        <div className='break' style={{margin: "15px"}} />
-        <Link to="/" style={{ textDecoration: "none", cursor: "pointer", color: "#404E3B", display: "block", textAlign: "right" }}>&larr; Back to dashboard</Link>
+        <Link to="/register" className="auth-link">Or click here to register</Link>
+        <div className='break' />
+        <Link to="/" className="auth-link back-link-right">&larr; Back to dashboard</Link>
       </div>
     </div>
   );
